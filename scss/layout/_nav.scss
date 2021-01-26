@@ -1,0 +1,8 @@
+.nav {
+  padding: 20px;
+  background-color: rgb(24, 123, 148);
+  &-title {
+    color: $theme_1-text;
+    font-size: 1.5rem;
+  }
+}

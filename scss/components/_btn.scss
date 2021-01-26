@@ -1,0 +1,42 @@
+.link {
+  @include flexCenter;
+  width: 300px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  outline: none;
+  &:hover .link_btn-effect {
+    width: 100%;
+  }
+
+  &-btn {
+    @include btnSize;
+    border: none;
+    cursor: pointer;
+    background-color: #fff;
+    border: 20px;
+    outline: none;
+    color: rgb(255, 255, 255);
+
+    .txt {
+      z-index: 10;
+      opacity: 0.8;
+      color: rgb(218, 167, 3);
+    }
+    &:active {
+      border: 1px solid #0bc9cf;
+    }
+  }
+  &_btn-effect {
+    position: absolute;
+
+    @include btnSize;
+    width: 20%;
+    left: 0;
+    background-color: rgb(32, 33, 34);
+    transition: width 0.3s ease-in-out;
+  }
+}

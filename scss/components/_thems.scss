@@ -1,0 +1,80 @@
+.them {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  border: 0.5px solid rgb(204, 199, 199);
+  border-radius: 5px;
+  height: 100px;
+  overflow: hidden;
+
+  margin-bottom: 30px;
+  cursor: pointer;
+  .li {
+    flex: 1;
+  }
+  &-name {
+    background-color: $theme_1;
+    color: $theme_1-text;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  }
+  &_choise {
+    position: relative;
+    display: flex;
+    background-color: $theme_1-text;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    .checked {
+      position: absolute;
+      right: 20px;
+    }
+    &_texts {
+      width: 170px;
+      height: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      &-li {
+        background-color: #c9c6c6;
+        width: 100%;
+        height: 4px;
+        border-radius: 3px;
+      }
+      .shorter {
+        width: 100px;
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid gray;
+      @include posAlignCenter;
+      left: 20px;
+    }
+  }
+}
+.them_2-nav {
+  background-color: $theme_2;
+}
+
+.them_2-content {
+  background-color: $theme_2-content;
+}
+.them_3-nav {
+  background-color: $theme_3;
+}
+
+.hide {
+  display: none;
+}
