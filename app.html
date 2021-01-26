@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/main.css" />
+    <title>To_Do_App</title>
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <ul class="nav_ul">
+          <li class="nav_ul-li"><a href="#">To_Do_App</a></li>
+          <li class="nav_ul-li"><a href="./index.html">THEME</a></li>
+        </ul>
+      </nav>
+    </header>
+    <section class="app_Container">
+      <div class="app_wrapper">
+        <button class="create_task" type="button">
+          <span>+ </span> Create Task
+        </button>
+        <!-- Form  -->
+        <div class="form_container">
+     
+          <form class="form" action="#">
+            <div class="form_wrap" >
+            <div class="form_about">
+           <input class="form_about-task" placeholder="I want to.." type="text">
+         <ul class="form_about_type" >
+           <li><i class="fas fa-bell"></i>Today</li>
+           <li><i class="fas fa-bell"></i>Tomorrow</li>
+           <li><i class="fas fa-bell"></i>next Week</li>
+         </ul>
+         <label class="form_about-title" for="description">Description</label>
+         <textarea type="text" id="description" name="description" placeholder="add description.." class="form_about-description" >
+         </textarea>
+          </div>
+         <div class="form_details" >
+          <div class="form_details_types">
+            <h4 class="form_details_type-title" >set Type</h4>
+              <label class="form_details_types-type">Personal</label>
+          </div>
+          <div class="form_details_time">
+            <h4 class="form_details_time-title" > Time</h4>
+              <label class="form_details_time-set">Set Time</label>
+          </div>
+          <div class="form_details_status">
+            <h4 class="form_details_status-title" >set status</h4>
+              <label class="form_details_time-set">status</label>
+          </div>
+         </div>
+        </div>  
+         <button type="submit" class="form_btn" >Add Task</button>
+          </form>
+        </div>
+        <!-- Form End -->
+        <div class="tasks_wrapper" >
+         <!-- Today Tasks -->
+        <div class="task_container">
+          <div class="task today_task">
+            <div class="task_description">
+              <h3 class="task-title" data-id="today_task-list" >Today</h3><span class="task_count">0</span>
+            </div>
+            <ul class="task_list today_task-list">
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+            </ul>
+          </div>
+        </div>
+         <!-- End Today Tasks -->
+
+         <!-- Tomorrow Tasks -->
+        <div class="task_container">
+          <div class="task tomorrow_task">
+            <div class="task_description">
+              <h3 class="task-title" data-id="tomorrow_task-list" >Tomorrow</h3><span class="task_count">0</span>
+            </div>
+            <ul class="task_list tomorrow_task-list">
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+              
+            </ul>
+          </div>
+        </div>
+         <!-- End Tomorrow Tasks -->
+         <!-- Next Week Tasks -->
+        <div class="task_container">
+          <div class="task ">
+            <div class="task_description">
+              <h3 class="task-title" data-id="next_week-task" >Next Week</h3><span class="task_count">0</span>
+            </div>
+            <ul class="task_list next_week-task">
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+              <li class="task_list-li">hjasd</li>
+            </ul>
+          </div>
+        </div>
+      
+         <!-- Next Week Tasks -->
+        </div>
+      </div>
+    </section>
+
+    <img src="./img/cloudp.svg" alt="rocket" />
+    <script src="./main.js"></script>
+  </body>
+</html>

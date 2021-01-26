@@ -1,14 +1,49 @@
-@mixin flexCenter {
+// @mixin flexCenter {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+@mixin flexPos($justify: center, $align: center) {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: $justify;
+  align-items: $align;
+  width: 100%;
+  height: 100%;
+}
+@mixin title {
+  color: $theme_1-text;
+  font-size: 1.5rem;
 }
 @mixin btnSize {
   width: 100%;
   height: 100%;
 }
-
-@mixin posAlignCenter {
+@mixin before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid gray;
+}
+@mixin form_btn($placeholder_font: 18px) {
+  width: 100%;
+  border: 1px solid #b1b1ab;
+  padding: 10px;
+  outline: none;
+  border-radius: 10px;
+  &:focus {
+    background-color: #eeeee8;
+    border: 1px solid #0299be;
+  }
+  &::placeholder {
+    font-size: $placeholder_font;
+  }
+}
+@mixin posAlignCenter($translate: translateY(-50%)) {
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: $translate;
 } ;

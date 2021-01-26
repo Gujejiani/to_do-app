@@ -6,7 +6,8 @@
 html,
 body {
   font-size: 12px;
-  height: 100%; }
+  height: 100%;
+  font-family: "Montserrat", sans-serif; }
 
 ul {
   list-style: none; }
@@ -16,7 +17,9 @@ a {
 
 .nav {
   padding: 20px;
-  background-color: #187b94; }
+  background-color: #187b94;
+  position: fixed;
+  width: 100%; }
   .nav-title {
     color: #fafaff;
     font-size: 1.5rem; }
@@ -97,6 +100,7 @@ a {
       border-radius: 50%;
       border: 1px solid gray;
       top: 50%;
+      left: 50%;
       transform: translateY(-50%);
       left: 20px; }
 
@@ -116,12 +120,13 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
   width: 300px;
   height: 40px;
   position: relative;
   overflow: hidden;
   margin: 0 auto;
-  background-color: #fff;
   border-radius: 10px;
   outline: none; }
   .link:hover .link_btn-effect {
@@ -131,7 +136,7 @@ a {
     height: 100%;
     border: none;
     cursor: pointer;
-    background-color: #fff;
+    background-color: transparent;
     border: 20px;
     outline: none;
     color: white; }
@@ -149,3 +154,218 @@ a {
     left: 0;
     background-color: #202122;
     transition: width 0.3s ease-in-out; }
+
+.create_task {
+  width: 160px;
+  padding: 5px;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  border-radius: 20px;
+  background-color: #3479f8;
+  color: #fafaff;
+  font-size: 14px;
+  cursor: pointer; }
+  .create_task:hover {
+    background-color: #085af1; }
+
+.nav_ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%; }
+  .nav_ul-li {
+    position: relative; }
+    .nav_ul-li a {
+      padding-bottom: 5px;
+      color: #fafaff;
+      font-size: 1.5rem; }
+      .nav_ul-li a:hover::after {
+        content: "";
+        display: inline-block;
+        width: 40px;
+        height: 1px;
+        background-color: #fafaff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
+        top: 29px; }
+
+.app_Container {
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0 10px;
+  padding-top: 100px; }
+  .app_Container .app_wrapper {
+    max-width: 600px;
+    height: 90%;
+    padding: 5px;
+    margin: auto;
+    background-color: #eeebeb;
+    border-radius: 10px;
+    position: relative; }
+
+.task_container {
+  padding: 10px;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.5rem; }
+
+.tasks_wrapper {
+  padding: 20px 30px;
+  height: 100%; }
+
+.task {
+  position: relative; }
+  .task_description {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%; }
+  .task-title {
+    cursor: pointer; }
+    .task-title:hover {
+      color: #085af1; }
+  .task_list {
+    height: 0;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden; }
+    .task_list-li {
+      padding: 10px 10px;
+      color: #000;
+      font-size: 1rem;
+      position: relative;
+      border-radius: 10px;
+      padding-left: 30px; }
+      .task_list-li::before {
+        content: "";
+        position: absolute;
+        left: 5px;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 2px solid gray; }
+      .task_list-li:hover {
+        background-color: #dedfe0;
+        cursor: pointer; }
+
+.task_count {
+  background-color: #3479f8;
+  padding: 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f3f3f3;
+  font-weight: normal;
+  font-size: 15px; }
+
+.task_title_clicked {
+  color: #085af1; }
+
+.hidden {
+  visibility: hidden; }
+
+.form_container {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  padding: 0 10px; }
+  .form_container .form {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    max-width: 500px; }
+    .form_container .form_wrap {
+      display: flex;
+      padding: 10px; }
+    .form_container .form_btn {
+      width: 100%;
+      padding: 10px;
+      cursor: pointer;
+      color: #085af1;
+      font-weight: bolder;
+      border: none;
+      outline: none;
+      box-shadow: 1px 1px 5px 1px #bdd9e6;
+      border-radius: 10px;
+      background-color: #fff; }
+      .form_container .form_btn:active {
+        outline: 1px solid #fff; }
+    .form_container .form .form_about {
+      flex: 3;
+      border-right: 2px solid #f2f5f2;
+      padding: 0 10px; }
+      .form_container .form .form_about-task {
+        width: 100%;
+        border: 1px solid #b1b1ab;
+        padding: 10px;
+        outline: none;
+        border-radius: 10px; }
+        .form_container .form .form_about-task:focus {
+          background-color: #eeeee8;
+          border: 1px solid #0299be; }
+        .form_container .form .form_about-task::placeholder {
+          font-size: 18px; }
+      .form_container .form .form_about-description {
+        width: 100%;
+        border: 1px solid #b1b1ab;
+        padding: 10px;
+        outline: none;
+        border-radius: 10px;
+        overflow: hidden;
+        resize: none;
+        height: 20px;
+        padding-bottom: 50px;
+        margin-bottom: 80px; }
+        .form_container .form .form_about-description:focus {
+          background-color: #eeeee8;
+          border: 1px solid #0299be; }
+        .form_container .form .form_about-description::placeholder {
+          font-size: 13px; }
+      .form_container .form .form_about-title {
+        display: inline-block;
+        padding: 5px;
+        font-weight: bolder; }
+      .form_container .form .form_about_type {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        flex-flow: wrap;
+        color: #06608a; }
+        .form_container .form .form_about_type li {
+          background-color: #fffefe;
+          padding: 5px;
+          border-radius: 10px;
+          box-shadow: 1px 1px 5px 1px #bdd9e6;
+          margin-bottom: 30px;
+          cursor: pointer; }
+          .form_container .form .form_about_type li i {
+            color: #06608a;
+            margin-right: 10px; }
+    .form_container .form .form_details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 20px;
+      align-items: center; }
+      .form_container .form .form_details div {
+        margin-bottom: 30px; }
+        .form_container .form .form_details div label {
+          display: inline-block;
+          margin-top: 3px;
+          color: #187b94;
+          font-weight: bolder;
+          cursor: pointer; }

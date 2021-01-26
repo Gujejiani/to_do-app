@@ -1,8 +1,9 @@
 .nav {
   padding: 20px;
   background-color: rgb(24, 123, 148);
+  position: fixed;
+  width: 100%;
   &-title {
-    color: $theme_1-text;
-    font-size: 1.5rem;
+    @include title;
   }
 }

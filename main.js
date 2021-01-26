@@ -1,3 +1,5 @@
+"use strict";
+
 /////////////////// Theme Start ////////////////////////
 
 const thems = document.querySelectorAll(".them");
@@ -6,7 +8,6 @@ const body = document.querySelector("body");
 const imgs = document.querySelectorAll("img");
 
 thems.forEach((theme) => {
-  console.log(theme);
   //adding listener to ich theme
   theme.addEventListener("click", function (e) {
     const currentTheme = e.currentTarget.dataset.id;
@@ -22,7 +23,7 @@ if (navStyle && bodyStyle && checked) {
   addStylesFromLocalStorage();
 }
 
-themeCheked = (id) => {
+const themeCheked = (id) => {
   if (!id) return;
   const check = document.querySelector(`.${id}`);
   check.classList.toggle("hide");
@@ -30,7 +31,7 @@ themeCheked = (id) => {
   switchThemeColors(id);
 };
 
-switchThemeColors = (id) => {
+const switchThemeColors = (id) => {
   switch (id) {
     case "dark":
       nav.classList.remove("sky_nav", "tangerine_nav");
@@ -55,7 +56,7 @@ switchThemeColors = (id) => {
   }
 };
 
-removeChecked = (id) => {
+const removeChecked = (id) => {
   //saving theme colors to local Storage
   saveThemeToLocalStorage(id);
   //checking if other thems are already checked and if so, removing img
@@ -66,9 +67,9 @@ removeChecked = (id) => {
   });
 };
 
-saveThemeToLocalStorage = (id) => {
+const saveThemeToLocalStorage = (id) => {
   let navStyle = nav.className.split(" ")[1];
-  console.log(navStyle);
+
   if (navStyle) {
     localStorage.setItem("nav_style", JSON.stringify(navStyle));
     localStorage.setItem("body_style", JSON.stringify(body.className));
@@ -87,3 +88,54 @@ function addStylesFromLocalStorage() {
   });
 }
 ////////////////////////////////////////// Themes End /////////////////////////////////////////////////////
+const createTask = document.querySelector(".create_task");
+const tasks_Wrapper = document.querySelector(".tasks_wrapper");
+const tasksTitle = document.querySelectorAll(".task-title");
+
+let heightadded = false;
+
+class App {
+  #id;
+  constructor() {
+    // todayTasks.addEventListener("click", this.toggleTodayTasks);
+    // tomorrowTasks.addEventListener("click", this.toggleTodayTasks);
+    tasks_Wrapper.addEventListener("click", this._showAndHidetasks.bind(this));
+  }
+
+  _showAndHidetasks(e) {
+    const title = e.target;
+    const items = title.nextSibling;
+    //checking if title clicked
+    if (title.nodeName === "H3") {
+      this.#id = title.dataset.id;
+
+      title.classList.toggle("task_title_clicked");
+      const taskUlList = document.querySelector(`.${this.#id}`);
+
+      let tasksCount = taskUlList.childElementCount;
+      items.textContent = tasksCount;
+      //  counting ul height, acording to children
+      const height = 35 * tasksCount;
+
+      this._removeTitleSelectors(this.#id);
+
+      //checking if heigth is added or not to ul element, which cotains our task lists
+      if (taskUlList.offsetHeight === 0) {
+        taskUlList.style.height = `${height}px`;
+      } else {
+        taskUlList.style.height = `0`;
+      }
+    }
+  }
+
+  //removing color from past selected task titles
+  _removeTitleSelectors(id) {
+    tasksTitle.forEach((title) => {
+      if (title.dataset.id !== id) {
+        title.classList.remove("task_title_clicked");
+      }
+    });
+  }
+}
+
+const app = new App();

@@ -1,0 +1,67 @@
+.task_container {
+  padding: 10px;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.tasks_wrapper {
+  padding: 20px 30px;
+  height: 100%;
+
+  // overflow: scroll;
+}
+
+.task {
+  position: relative;
+  &_description {
+    width: 100%;
+    @include flexPos(space-between);
+  }
+
+  &-title {
+    cursor: pointer;
+    &:hover {
+      color: darken($task_btn, 10%);
+    }
+  }
+  &_list {
+    height: 0;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    &-li {
+      padding: 10px 10px;
+      color: #000;
+      font-size: 1rem;
+      position: relative;
+      border-radius: 10px;
+      padding-left: 30px;
+      &::before {
+        @include before;
+      }
+      &:hover {
+        background-color: lighten($task_list, 50%);
+        cursor: pointer;
+      }
+    }
+  }
+}
+.task_count {
+  background-color: $task_btn;
+  padding: 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f3f3f3;
+  font-weight: normal;
+  font-size: 15px;
+}
+
+.task_title_clicked {
+  color: darken($task_btn, 10%);
+}
+.hidden {
+  visibility: hidden;
+}
