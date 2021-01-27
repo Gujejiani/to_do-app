@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="./css/main.css" />
     <title>To_Do_App</title>
   </head>
-  <body>
+  <body class="body">
+    <div class="overlay" >  </div>
+    <div class="task-overlay" >  </div>
     <header>
       <nav class="nav">
         <ul class="nav_ul">
@@ -18,6 +20,7 @@
         </ul>
       </nav>
     </header>
+ 
     <section class="app_Container">
       <div class="app_wrapper">
         <button class="create_task" type="button">
@@ -31,31 +34,54 @@
             <div class="form_about">
            <input class="form_about-task" placeholder="I want to.." type="text">
          <ul class="form_about_type" >
-           <li><i class="fas fa-bell"></i>Today</li>
-           <li><i class="fas fa-bell"></i>Tomorrow</li>
-           <li><i class="fas fa-bell"></i>next Week</li>
+           <li class="type" data-id="today" ><i class="fas fa-bell"></i>Today</li>
+           <li class="type" data-id="tomorrow" ><i class="fas fa-bell"></i>Tomorrow</li>
+           <li class="type" data-id="nextWeek" ><i class="fas fa-bell"></i>next Week</li>
          </ul>
          <label class="form_about-title" for="description">Description</label>
          <textarea type="text" id="description" name="description" placeholder="add description.." class="form_about-description" >
          </textarea>
           </div>
          <div class="form_details" >
-          <div class="form_details_types">
-            <h4 class="form_details_type-title" >set Type</h4>
-              <label class="form_details_types-type">Personal</label>
+          <div class="form_details_types status">
+            <h4 class="form_details_type-title" >set type</h4>
+              <label class="form_details_types-type set-type">To Do</label>
           </div>
           <div class="form_details_time">
             <h4 class="form_details_time-title" > Time</h4>
               <label class="form_details_time-set">Set Time</label>
           </div>
           <div class="form_details_status">
-            <h4 class="form_details_status-title" >set status</h4>
-              <label class="form_details_time-set">status</label>
+            <h4 class="form_details_status-title" >set importance</h4>
+              <label class="form_details_time-set set-priority">status</label>
           </div>
          </div>
         </div>  
          <button type="submit" class="form_btn" >Add Task</button>
           </form>
+          
+          </div>
+          <div class="status_wrapper wrapper" >
+            <h3 class="title" >Choose status</h3>
+              <ul class="status_list"  >
+                <li data-status="To Do"  class="status_list-li" >To Do<i data-id="To Do"   class="fas fa-check status_icon"></i></li>
+                <li data-status="In Progress" class="status_list-li"  >In Progres<i data-id="In Progress"   class="fas fa-check status_icon"></i></li>
+                <li data-status="done" class="status_list-li" >Done<i data-id="done"  class="fas fa-check status_icon"></i></li>
+              </ul>
+        </div>
+          <div class="priority_wrapper wrapper" >
+            <h3 class="title" >Priorities</h3>
+              <ul class="priority_list"  >
+                <li data-priority="Important"  class="priority_list-li" >Important<i data-id="Important"   class="fas fa-check priority_icon"></i></li>
+                <li data-priority="Family" class="priority_list-li"  >Family<i data-id="Family"   class="fas fa-check priority_icon"></i></li>
+                <li data-priority="Deadline" class="priority_list-li" >Deadline<i data-id="Deadline"  class="fas fa-check priority_icon"></i></li>
+                <li data-priority="Fun" class="priority_list-li" >Fun<i data-id="Fun"  class="fas fa-check priority_icon"></i></li>
+              </ul>
+              <div class="priority wrapper" >
+
+                <label class="priority-cancel">Cancel</label>
+                <label class="priority-save">Save</label>
+              </div>
         </div>
         <!-- Form End -->
         <div class="tasks_wrapper" >
@@ -107,10 +133,12 @@
       
          <!-- Next Week Tasks -->
         </div>
+     
       </div>
     </section>
 
-    <img src="./img/cloudp.svg" alt="rocket" />
+
+  
     <script src="./main.js"></script>
   </body>
 </html>

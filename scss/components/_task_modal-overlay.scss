@@ -1,0 +1,9 @@
+.task-overlay {
+  @include overlay(0.7);
+
+  z-index: 30;
+}
+
+.task_overlay-show {
+  display: inline-block;
+}

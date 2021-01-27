@@ -16,7 +16,7 @@ a {
   text-decoration: none; }
 
 .nav {
-  padding: 20px;
+  padding: 15px;
   background-color: #187b94;
   position: fixed;
   width: 100%; }
@@ -194,7 +194,6 @@ a {
         top: 29px; }
 
 .app_Container {
-  z-index: -1;
   width: 100%;
   height: 100%;
   background-position: center;
@@ -215,11 +214,13 @@ a {
   padding: 10px;
   color: #000;
   font-weight: bold;
-  font-size: 1.5rem; }
+  font-size: 1.5rem;
+  z-index: -1; }
 
 .tasks_wrapper {
   padding: 20px 30px;
-  height: 100%; }
+  height: 100%;
+  position: relative; }
 
 .task {
   position: relative; }
@@ -279,14 +280,20 @@ a {
 
 .form_container {
   position: absolute;
-  z-index: 100;
   width: 100%;
-  padding: 0 10px; }
+  padding: 0 10px;
+  transition: all 0.4s ease-in-out;
+  visibility: hidden;
+  transform: translate(2%, -5%);
+  opacity: 0;
+  overflow: hidden; }
   .form_container .form {
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    max-width: 500px; }
+    border-radius: 10px;
+    max-width: 500px;
+    position: relative; }
     .form_container .form_wrap {
       display: flex;
       padding: 10px; }
@@ -327,7 +334,8 @@ a {
         overflow: hidden;
         resize: none;
         height: 20px;
-        padding-bottom: 50px;
+        padding-bottom: 30px;
+        padding-top: 10px;
         margin-bottom: 80px; }
         .form_container .form .form_about-description:focus {
           background-color: #eeeee8;
@@ -344,16 +352,18 @@ a {
         padding: 20px;
         flex-flow: wrap;
         color: #06608a; }
-        .form_container .form .form_about_type li {
+        .form_container .form .form_about_type .type {
           background-color: #fffefe;
           padding: 5px;
           border-radius: 10px;
           box-shadow: 1px 1px 5px 1px #bdd9e6;
           margin-bottom: 30px;
           cursor: pointer; }
-          .form_container .form .form_about_type li i {
+          .form_container .form .form_about_type .type i {
             color: #06608a;
             margin-right: 10px; }
+        .form_container .form .form_about_type .task_type-selected {
+          background-color: #0ea2cf; }
     .form_container .form .form_details {
       flex: 1;
       display: flex;
@@ -362,10 +372,176 @@ a {
       padding: 20px;
       align-items: center; }
       .form_container .form .form_details div {
-        margin-bottom: 30px; }
+        margin-bottom: 30px;
+        width: 100px;
+        text-align: center; }
         .form_container .form .form_details div label {
           display: inline-block;
           margin-top: 3px;
+          border-radius: 10px;
+          width: 100px;
+          height: 20px;
+          padding-top: 2px;
+          background-color: #fff;
+          text-align: center;
           color: #187b94;
           font-weight: bolder;
           cursor: pointer; }
+
+.form_modal-Show {
+  visibility: visible;
+  z-index: 90;
+  opacity: 1;
+  transform: translate(5%, 5%); }
+  @media (max-width: 700px) {
+    .form_modal-Show {
+      transform: translate(-2%, 1%); } }
+
+.status_wrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  background-color: #fffefe;
+  padding: 10px 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -90%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  z-index: 180;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease-in-out; }
+  .status_wrapper .title {
+    padding: 5px;
+    padding-bottom: 10px;
+    box-shadow: 1px 2px 1px #dfdada; }
+  .status_wrapper .status_list {
+    width: 300px; }
+    .status_wrapper .status_list-li {
+      padding: 10px;
+      border-bottom: 1px solid #c4b7b7;
+      transition: background-color 0.4s ease-in;
+      position: relative; }
+      .status_wrapper .status_list-li .status_icon {
+        color: green;
+        position: absolute;
+        right: 15px;
+        visibility: hidden; }
+      .status_wrapper .status_list-li .status_selected {
+        visibility: visible; }
+      .status_wrapper .status_list-li:hover {
+        background-color: #e5e5eb;
+        cursor: pointer; }
+
+.status-show {
+  opacity: 1;
+  visibility: visible; }
+
+.overlay {
+  position: fixed;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  display: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 120; }
+
+.show {
+  display: inline-block; }
+
+.priority_wrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  background-color: #fffefe;
+  padding: 10px 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  z-index: 180;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease-in-out; }
+  .priority_wrapper .priority {
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    font-size: 15px;
+    color: #046d88; }
+    .priority_wrapper .priority label {
+      cursor: pointer; }
+    .priority_wrapper .priority-cancel {
+      border-right: 2px solid #0c5c81;
+      padding-right: 50px; }
+  .priority_wrapper .title {
+    padding: 5px;
+    padding-bottom: 10px;
+    box-shadow: 1px 2px 1px #dfdada; }
+  .priority_wrapper .priority_list li:nth-child(1) {
+    background-color: #965657; }
+  .priority_wrapper .priority_list li:nth-child(2) {
+    background-color: #c96567; }
+  .priority_wrapper .priority_list li:nth-child(3) {
+    background-color: #e8a87c; }
+  .priority_wrapper .priority_list li:nth-child(4) {
+    background-color: #85dccb; }
+  .priority_wrapper .priority_list {
+    width: 300px; }
+    .priority_wrapper .priority_list-li {
+      padding: 20px;
+      padding-left: 50px;
+      border-bottom: 1px solid #c4b7b7;
+      transition: background-color 0.4s ease-in;
+      position: relative; }
+      .priority_wrapper .priority_list-li::before {
+        content: "";
+        position: absolute;
+        display: inline-block;
+        left: 14px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: transparent;
+        border: 1px solid #c2aaaa;
+        background-color: #fff; }
+      .priority_wrapper .priority_list-li .priority_icon {
+        padding: 5px;
+        color: #0a8379;
+        position: absolute;
+        left: 15px;
+        visibility: hidden;
+        z-index: 1; }
+      .priority_wrapper .priority_list-li .priority_selected {
+        visibility: visible; }
+      .priority_wrapper .priority_list-li:hover {
+        background-color: #e5e5eb;
+        cursor: pointer; }
+
+.priority-show {
+  opacity: 1;
+  visibility: visible; }
+
+.task-overlay {
+  position: fixed;
+  opacity: 0.7;
+  width: 100%;
+  height: 100%;
+  display: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 120;
+  z-index: 30; }
+
+.task_overlay-show {
+  display: inline-block; }

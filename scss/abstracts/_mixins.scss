@@ -10,6 +10,20 @@
   width: 100%;
   height: 100%;
 }
+@mixin overlay($opacity: 1, $color: rgba(0, 0, 0, 0.5)) {
+  position: fixed;
+  opacity: $opacity;
+  width: 100%;
+  height: 100%;
+  display: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $color;
+  z-index: 120;
+}
+
 @mixin title {
   color: $theme_1-text;
   font-size: 1.5rem;
