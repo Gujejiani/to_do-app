@@ -15,6 +15,7 @@
 .task {
   position: relative;
   &_description {
+    overflow: hidden;
     width: 100%;
     @include flexPos(space-between);
   }
@@ -29,15 +30,26 @@
     height: 0;
     transition: all 0.2s ease-in-out;
     overflow: hidden;
+
     &-li {
-      padding: 10px 10px;
+      padding: 10px 60px;
       color: #000;
       font-size: 1rem;
       position: relative;
       border-radius: 10px;
-      padding-left: 30px;
+      margin-bottom: 2px;
       &::before {
         @include before;
+      }
+      .priority {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 90%;
+        width: 5px;
+        border-radius: 20px;
+
+        background-color: red;
       }
       &:hover {
         background-color: lighten($task_list, 50%);
@@ -58,6 +70,7 @@
   color: #f3f3f3;
   font-weight: normal;
   font-size: 15px;
+  transition: all 0.3s ease-in-out;
 }
 
 .task_title_clicked {

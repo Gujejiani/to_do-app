@@ -119,9 +119,8 @@ const priorityCancel = document.querySelector(".priority-cancel");
 
 class App {
   #id;
-  #hideForm;
   #type;
-  #status;
+  #status = "To Do";
   #priority;
   #priorityColor;
   #tasks = [];
@@ -143,13 +142,24 @@ class App {
 
   _newTaskAdded(e) {
     e.preventDefault();
+    const task = new Task(
+      taskInput.value,
+      descriptionInput.value,
+      this.#type,
+      this.#status,
+      this.#priority
+    );
 
+    this.#tasks.push(task);
+    const data1 = this.#tasks[1]?.fetchAll();
+    console.log(this.#tasks);
     this._hideForm();
   }
 
   _showAndHidetasks(e) {
     const title = e.target;
     const task = title.nextSibling;
+    console.log(task);
     //checking if title clicked
     if (title.nodeName === "H3") {
       this.#id = title.dataset.id;
@@ -166,7 +176,9 @@ class App {
       //checking if heigth is added or not to ul element, which cotains our task lists
       if (taskUlList.offsetHeight === 0) {
         taskUlList.style.height = `${height}px`;
+        task.style.transform = "translateY(120%)";
       } else {
+        task.style.transform = "translateY(0)";
         taskUlList.style.height = `0`;
       }
     }
@@ -183,24 +195,21 @@ class App {
   }
 
   _toggleOverlayForm(e) {
-    console.log(e.target);
     task_overlay.classList.toggle("task_overlay-show");
-    console.log(task_overlay);
+
     formContainer.classList.toggle("form_modal-Show");
     setTimeout(() => {
       taskInput.focus();
     }, 30);
   }
   _hideForm(e) {
-    console.log(e.target);
+    console.log("hide form");
     //checking if closest node is from element
-
-    if (!e.target) return;
 
     formContainer.classList.remove("form_modal-Show");
     task_overlay.classList.remove("task_overlay-show");
     this._removeTitleSelectors(types, "all", "task_type-selected");
-
+    this._resetNewTask();
     // if (formContainer.classList.contains("form_modal-Show")) {
     //   //if overlay is already show and target is not form, we are hiding form overlay
     //   console.log("hid Form");
@@ -259,6 +268,17 @@ class App {
   _priorityCancel() {
     this._resetPriority();
   }
+  _resetNewTask() {
+    descriptionInput.value = taskInput.value = "";
+    this.#priority = "";
+    this.#priorityColor = "";
+    this.#type = "";
+    this.#status = "";
+    setPriorityType.style.background = "#fff";
+    setPriorityType.innerHTML = "status";
+    setType.innerHTML = "To Do";
+    console.log("reseted");
+  }
 
   _resetPriority() {
     this.#priority = "";
@@ -280,7 +300,6 @@ class App {
         this.#priority,
         "priority_selected"
       );
-      console.log(this.#priority);
     }
   }
 
@@ -289,7 +308,6 @@ class App {
     statusModal.classList.add("status-show");
   }
   _priorityModal() {
-    console.log("asdda");
     overlay.classList.add("show");
     priorityModal.classList.add("priority-show");
   }
@@ -322,10 +340,15 @@ class App {
 const app = new App();
 
 class Task {
-  constructor(task, description, type, priority) {
+  constructor(task, description, type, status, priority) {
     this.task = task;
     this.description = description;
     this.type = type;
+    this.status = status;
     this.priority = priority;
+  }
+
+  fetchAll() {
+    return this;
   }
 }

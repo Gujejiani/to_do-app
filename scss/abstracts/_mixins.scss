@@ -35,13 +35,14 @@
 @mixin before {
   content: "";
   position: absolute;
-  left: 5px;
+  left: 20px;
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   border: 2px solid gray;
 }
+
 @mixin form_btn($placeholder_font: 18px) {
   width: 100%;
   border: 1px solid #b1b1ab;

@@ -129,8 +129,20 @@ a {
   margin: 0 auto;
   border-radius: 10px;
   outline: none; }
+  .link .link_btn-effect {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; }
+    .link .link_btn-effect svg {
+      width: 20px;
+      height: 10;
+      margin-left: 20px;
+      color: #f18c08;
+      transition: all 0.5s ease-in-out; }
   .link:hover .link_btn-effect {
     width: 100%; }
+  .link:hover svg {
+    transform: translateX(300%); }
   .link-btn {
     width: 100%;
     height: 100%;
@@ -140,6 +152,8 @@ a {
     border: 20px;
     outline: none;
     color: white; }
+    .link-btn i {
+      z-index: 5000; }
     .link-btn .txt {
       z-index: 10;
       opacity: 0.8;
@@ -153,7 +167,7 @@ a {
     width: 20%;
     left: 0;
     background-color: #202122;
-    transition: width 0.3s ease-in-out; }
+    transition: width 0.5s ease-in-out; }
 
 .create_task {
   width: 160px;
@@ -225,6 +239,7 @@ a {
 .task {
   position: relative; }
   .task_description {
+    overflow: hidden;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -240,21 +255,29 @@ a {
     transition: all 0.2s ease-in-out;
     overflow: hidden; }
     .task_list-li {
-      padding: 10px 10px;
+      padding: 10px 60px;
       color: #000;
       font-size: 1rem;
       position: relative;
       border-radius: 10px;
-      padding-left: 30px; }
+      margin-bottom: 2px; }
       .task_list-li::before {
         content: "";
         position: absolute;
-        left: 5px;
+        left: 20px;
         display: inline-block;
-        width: 10px;
-        height: 10px;
+        width: 15px;
+        height: 15px;
         border-radius: 50%;
         border: 2px solid gray; }
+      .task_list-li .priority {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 90%;
+        width: 5px;
+        border-radius: 20px;
+        background-color: red; }
       .task_list-li:hover {
         background-color: #dedfe0;
         cursor: pointer; }
@@ -270,7 +293,8 @@ a {
   align-items: center;
   color: #f3f3f3;
   font-weight: normal;
-  font-size: 15px; }
+  font-size: 15px;
+  transition: all 0.3s ease-in-out; }
 
 .task_title_clicked {
   color: #085af1; }
@@ -392,7 +416,7 @@ a {
   visibility: visible;
   z-index: 90;
   opacity: 1;
-  transform: translate(5%, 5%); }
+  transform: translate(5%, 20%); }
   @media (max-width: 700px) {
     .form_modal-Show {
       transform: translate(-2%, 1%); } }
