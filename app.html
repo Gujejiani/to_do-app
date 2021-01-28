@@ -39,28 +39,55 @@
            <li class="type" data-id="nextWeek" ><i class="fas fa-bell"></i>next Week</li>
          </ul>
          <label class="form_about-title" for="description">Description</label>
-         <textarea type="text" id="description" name="description" placeholder="add description.." class="form_about-description" >
+         <textarea cols="70" rows="50" type="text" id="description" name="description" placeholder="add description.." class="form_about-description" >
          </textarea>
           </div>
          <div class="form_details" >
-          <div class="form_details_types status">
-            <h4 class="form_details_type-title" >set type</h4>
-              <label class="form_details_types-type set-type">To Do</label>
+          <div class="form_details_types set-status">
+            <h4 class="form_details_type-title " >set status</h4>
+              <label class="form_details_types-type status ">To Do</label>
           </div>
-          <div class="form_details_time">
-            <h4 class="form_details_time-title" > Time</h4>
-              <label class="form_details_time-set">Set Time</label>
+          <div class="form_details_status set-priority">
+            <h4 class="form_details_status-title " >set importance</h4>
+              <label class="form_details_time-set priority ">status</label>
           </div>
-          <div class="form_details_status">
-            <h4 class="form_details_status-title" >set importance</h4>
-              <label class="form_details_time-set set-priority">status</label>
+
+          <div class="form_details_time ">
+            <h4 class="form_details_time-title"  > Time</h4>
+              <label class="form_details_time-set set-time">Today</label>
           </div>
+         
          </div>
         </div>  
          <button type="submit" class="form_btn" >Add Task</button>
           </form>
           
           </div>
+
+          <div class="update_wrapper" >
+            <form class="update_modal" action="#">
+            <div class="update_modal_header" > 
+            <h2 class="update_modal_header-title">task update</h2>      
+              </div>
+              <div class="form" >
+                <label class="form-title" for="task" >task</label>
+              <input value="kakha" id="task" type="text" class="form-task task_input" >  
+                <label class="form-title" for="taskDesc" >description</label>
+              <textarea  id="taskDesc" value="kakha" type="text" class="form-textArea" ></textarea>
+            </div>
+              <div class="info" >
+                <h3 class="update-status">change status:<span class="update_status" ></span></h3>
+                <h3 class="update-priority" >change priority:<span class="update_priority"  ></span></h3>
+              </div>
+                <div class="form-end">
+                  <button class="delete-task" >Delete Task</button>
+                   <button  type="submit"  class="update-save" >Save Changes</button>  
+                </div>
+            </form>
+
+          </div>
+
+
           <div class="status_wrapper wrapper" >
             <h3 class="title" >Choose status</h3>
               <ul class="status_list"  >
@@ -89,26 +116,25 @@
         <div class="task_container">
           <div class="task today_task">
             <div class="task_description">
-              <h3 class="task-title" data-id="today_task-list" >Today</h3><span class="task_count">0</span>
+              <h3 class="task-title today" data-id="today_task-list" >Today</h3><span class="task_count">0</span>
             </div>
             <ul class="task_list today_task-list">
-              <li class="task_list-li">hjasd</li>
-              <li class="task_list-li">hjasd</li>
-              <li class="task_list-li">hjasd</li>
+              <!-- `   <li class="task_list-li"><span class="priority" style="background-color:${priorityColor};"  ></span> ${task} <span class="task_status"  style="background-color:${statusColor};">${status}</span>  </li>` -->
+
             </ul>
           </div>
         </div>
          <!-- End Today Tasks -->
 
          <!-- Tomorrow Tasks -->
+         
         <div class="task_container">
           <div class="task tomorrow_task">
             <div class="task_description">
-              <h3 class="task-title" data-id="tomorrow_task-list" >Tomorrow</h3><span class="task_count">0</span>
+              <h3 class="task-title tomorrow" data-id="tomorrow_task-list" >Tomorrow</h3><span class="task_count">0</span>
             </div>
             <ul class="task_list tomorrow_task-list">
-              <li class="task_list-li"> <span class="priority" ></span> hjasd</li>
-              <li class="task_list-li"><span class="priority" ></span>hjasd</li>
+            
               
               
             </ul>
@@ -119,15 +145,11 @@
         <div class="task_container">
           <div class="task ">
             <div class="task_description">
-              <h3 class="task-title" data-id="next_week-task" >Next Week</h3><span class="task_count">0</span>
+              <h3 class="task-title nextWeek" data-id="next_week-task" >Next Week</h3><span class="task_count">0</span>
             </div>
             <ul class="task_list next_week-task">
-              <li class="task_list-li">hjasd</li>
-              <li class="task_list-li">hjasd</li>
-              <li class="task_list-li">hjasd</li>
-              <li class="task_list-li">hjasd</li>
-              <li class="task_list-li">hjasd</li>
-              <li class="task_list-li">hjasd</li>
+             
+              
             </ul>
           </div>
         </div>

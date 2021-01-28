@@ -61,4 +61,27 @@
   top: 50%;
   left: 50%;
   transform: $translate;
-} ;
+}
+@mixin hoverBtn {
+  transition: all 0.1s ease-in-out;
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+@mixin labelTitle {
+  font-size: 20px;
+  font-weight: bolder;
+  color: #477e8b;
+}
+
+@mixin textArea {
+  overflow: hidden;
+  resize: none;
+  height: 20px;
+  padding-bottom: 30px;
+
+  padding-top: 10px;
+  padding-left: 0;
+  margin-bottom: 80px;
+}

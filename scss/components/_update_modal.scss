@@ -1,0 +1,99 @@
+.update_wrapper {
+  display: flex;
+  z-index: 30;
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  max-width: 350px;
+
+  border-radius: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  .update_modal {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 20px;
+    &_header {
+      padding: 20px;
+      width: 100%;
+      padding-bottom: 20px;
+      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.4);
+    }
+    .form {
+      padding: 20px;
+      &-task {
+        @include form_btn;
+        margin-top: 10px;
+        padding: 10px;
+      }
+      &-textArea {
+        @include form_btn;
+        @include textArea;
+        margin-bottom: 0;
+        padding-left: 10px;
+      }
+      &-title {
+        display: inline-block;
+        @include labelTitle;
+        font-size: 16px;
+        margin: 10px 0;
+      }
+    }
+    .info {
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      h3 {
+        cursor: pointer;
+        position: relative;
+        margin-bottom: 20px;
+        font-weight: normal;
+      }
+      span {
+        margin-left: 10px;
+        display: inline-block;
+        width: 80px;
+        height: 20px;
+        position: absolute;
+        padding: 2px;
+        color: rgb(255, 255, 255);
+        left: 120px;
+        font-size: 12px;
+        background-color: #23ceb7;
+        font-weight: bolder;
+        border-radius: 10px;
+        text-align: center;
+      }
+    }
+    .form-end {
+      display: flex;
+      padding: 20px;
+      width: 100%;
+      justify-content: space-around;
+      button {
+        cursor: pointer;
+      }
+      .delete-task {
+        color: red;
+        font-size: 15px;
+        padding-right: 40px;
+        @include hoverBtn;
+        border: none;
+        outline: none;
+        width: 140px;
+        background-color: #fff;
+        border-right: 1px solid rgb(22, 62, 85);
+      }
+      .update-save {
+        width: 140px;
+        background-color: #fff;
+        color: rgb(20, 98, 134);
+        font-size: 15px;
+        @include hoverBtn;
+        border: none;
+        outline: none;
+      }
+    }
+  }
+}

@@ -28,9 +28,9 @@
   }
   &_list {
     height: 0;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.9s ease-in-out;
     overflow: hidden;
-
+    transition: all 0.9s ease-in-out;
     &-li {
       padding: 10px 60px;
       color: #000;
@@ -38,19 +38,29 @@
       position: relative;
       border-radius: 10px;
       margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+      transition: all 0.9s ease-in-out;
+
+      .task_status {
+        color: rgb(236, 222, 222);
+        background-color: #23ceb7;
+        padding: 3px 10px;
+        border-radius: 5px;
+        text-align: center;
+      }
       &::before {
         @include before;
       }
       .priority {
         position: absolute;
-        left: 0;
+        left: 2px;
         top: 0;
         height: 90%;
         width: 5px;
         border-radius: 20px;
-
-        background-color: red;
       }
+
       &:hover {
         background-color: lighten($task_list, 50%);
         cursor: pointer;
