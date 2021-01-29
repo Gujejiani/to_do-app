@@ -146,12 +146,13 @@ const setPriorityUpdate = document.querySelector(".update_priority"); //
 
 const deleteTask = document.querySelector(".delete-task");
 const updateTask = document.querySelector(".update_modal");
+const toggleUpdateModal = document.querySelector(".update_wrapper");
 
 let allTasks = document.querySelectorAll(".task_list-li");
 
 class App {
   #taskID = 0;
-  #id;
+  #timeId;
   #type = "today";
   #status = "To Do";
   #priority = "important";
@@ -159,6 +160,7 @@ class App {
   #tasks = [];
   #taskElement;
   #statusBackgorund;
+  #ShowAdnHideTaskEl;
 
   constructor() {
     tasks_Wrapper.addEventListener("click", this._showAndHidetasks.bind(this));
@@ -176,6 +178,7 @@ class App {
     updatePriority.addEventListener("click", this._priorityModal.bind(this));
     updateStatus.addEventListener("click", this._typeSelectHandler);
     updateTask.addEventListener("submit", this._updateTask.bind(this));
+    deleteTask.addEventListener("click", this._deleteTask.bind(this));
   }
 
   _newTaskAdded(e) {
@@ -196,9 +199,8 @@ class App {
       this.#taskID++;
       console.log(this.#tasks);
       this.#tasks.push(task);
-      const data1 = this.#tasks[0]?.fetchAll();
-      const currentTasks = this._getTasksByType(this.#type); //returns filtered tasks by tyoe  today || tomorrow || nextWeek
-      this._updateTasksCounter(this.#type, currentTasks);
+
+      this._updateTasksCounter(this.#type);
       this._hideForm();
       this._addTask();
     }
@@ -211,18 +213,35 @@ class App {
   _taskUpdateModal(e) {
     let label;
     if (e.target.nodeName === "LI") {
-      label = e.target.value;
-    } else if (e.target.closest("li")) {
+      label = e.target;
+      this.#taskElement = label;
+      toggleUpdateModal.classList.toggle("showUpdateModal");
+      task_overlay.classList.toggle("task_overlay-show");
+    } else {
       label = e.target.closest("li");
+      this.#taskElement = label;
+      toggleUpdateModal.classList.toggle("showUpdateModal");
+      task_overlay.classList.toggle("task_overlay-show");
     }
 
-    if (label) {
+    if (this.#taskElement) {
       console.log("taskUpdateModal");
-      let task = label.dataset.id;
-      let taskInfo = this.#tasks[task];
-      this._getValuesToUpdateForm(taskInfo);
 
-      this.#taskElement = label;
+      //find and return current object info which we want to update
+      let taskInfo = this._getCurrentTaskObjForUpdate(this.#taskElement);
+      this._getValuesToUpdateForm(taskInfo);
+    }
+  }
+  _getCurrentTaskObjForUpdate(taskEl) {
+    if (taskEl) {
+      let id = taskEl.dataset.id;
+
+      const task = this.#tasks.find((task) => {
+        console.log(task.id, id);
+        return task.id == id;
+      });
+
+      return task;
     }
   }
   _updateTask(e) {
@@ -238,17 +257,42 @@ class App {
       priorityNode.style.background = this.#priorityColor;
       taskTitle.innerHTML = updatedTaskInput.value;
       statusNode.style.background = this.#statusBackgorund;
+      this._updatePrivateTaskArray();
+      toggleUpdateModal.classList.remove("showUpdateModal");
+
+      task_overlay.classList.remove("task_overlay-show");
     }
-    // (task,
-    // description,
-    // type,
-    // status,
-    // priority,
-    // priorityColor,
-    // statusBackground)
-    this._updatePrivateTaskArray();
-    console.log(this.#tasks);
   }
+  _deleteTask(e) {
+    // _updateTasksCounter(type) //update count
+    console.log("deleted");
+
+    this.#taskElement.remove();
+
+    this._deleteTaskFromArray();
+  }
+  _deleteTaskFromArray() {
+    //get current task to delete
+    const currentTask = this._getCurrentTaskObjForUpdate(this.#taskElement);
+    //find index of task
+    const deleteObj = this.#tasks.findIndex(
+      (task) => task.id == currentTask.id
+    );
+    //remove task
+    this.#tasks.splice(deleteObj, 1);
+    //update task counter
+    this._updateTasksCounter(this.#type);
+
+    const taskUlList = document.querySelector(`.${this.#timeId}`);
+    let count = this.#ShowAdnHideTaskEl.nextSibling;
+
+    count.style.transform = "translateY(0)";
+
+    taskUlList.style.height = `0`;
+
+    this._resetValuesToUpdateForm();
+  }
+
   _updatePrivateTaskArray() {
     //updating araay of tasks
     this.#tasks[this.#taskElement.dataset.id].save(
@@ -269,7 +313,14 @@ class App {
     setPriorityUpdate.innerHTML = task.priority;
     setPriorityUpdate.style.background = task.priorityColor;
   }
-
+  _resetValuesToUpdateForm() {
+    updatedTaskInput.value = "";
+    updatedTaskDescription.value = "";
+    setStatusUpdate.innerHTML = "To Do";
+    setStatusUpdate.style.background = task.statusBackground;
+    setPriorityUpdate.innerHTML = "important";
+    setPriorityUpdate.style.background = "#965657";
+  }
   _updateStatusInUpdateModal() {
     console.log("updated status");
     setStatusUpdate.innerHTML = this.#status;
@@ -323,24 +374,31 @@ class App {
 
   _showAndHidetasks(e) {
     const title = e.target;
-    const task = title.nextSibling; //task = the ul list tasks
+    console.log(title);
+    const count = title.nextSibling; //task = the ul list tasks
+    console.log(count);
     console.log("task clicked");
     //checking if title clicked
     if (title.nodeName === "H3") {
-      this.#id = title.dataset.id;
+      this.#ShowAdnHideTaskEl = e.target;
+      this.#timeId = title.dataset.id;
       title.classList.toggle("task_title_clicked");
-      const taskUlList = document.querySelector(`.${this.#id}`);
-
+      const taskUlList = document.querySelector(`.${this.#timeId}`);
       let tasksCount = taskUlList.childElementCount;
 
-      this._removeTitleSelectors(tasksTitle, this.#id, "task_title_clicked");
+      this._removeTitleSelectors(
+        tasksTitle,
+        this.#timeId,
+        "task_title_clicked"
+      );
 
       //checking if heigth is added or not to ul element, which cotains our task lists
       if (taskUlList.offsetHeight === 0 && tasksCount > 0) {
+        console.log(taskUlList, tasksCount);
         taskUlList.style.height = `auto`;
-        task.style.transform = "translateY(120%)";
+        count.style.transform = "translateY(120%)";
       } else {
-        task.style.transform = "translateY(0)";
+        count.style.transform = "translateY(0)";
         taskUlList.style.height = `0`;
       }
     }
@@ -360,6 +418,7 @@ class App {
     task_overlay.classList.toggle("task_overlay-show");
 
     formModal.classList.toggle("form_modal-Show");
+
     setTimeout(() => {
       taskInput.focus();
     }, 30);
@@ -369,6 +428,8 @@ class App {
 
     //hide form modal
     formModal.classList.remove("form_modal-Show");
+    //hide modal if open
+    toggleUpdateModal.classList.remove("showUpdateModal");
     //remove overlay
     task_overlay.classList.remove("task_overlay-show");
     //removing selectors
@@ -493,9 +554,10 @@ class App {
 
     return tasks;
   }
-  _updateTasksCounter(type, task) {
+  _updateTasksCounter(type) {
+    const currentTasks = this._getTasksByType(this.#type); //returns filtered tasks by tyoe  today || tomorrow || nextWeek
     const count = document.querySelector(`.${type}`).nextSibling;
-    count.textContent = `${task.length}`;
+    count.textContent = `${currentTasks.length}`;
   }
 
   _typeSelectHandler() {

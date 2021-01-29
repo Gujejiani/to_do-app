@@ -5,7 +5,9 @@
   position: absolute;
   width: 100%;
   max-width: 350px;
-
+  transition: all 0.3s ease-in-out;
+  visibility: hidden;
+  opacity: 0;
   border-radius: 10px;
   left: 50%;
   transform: translateX(-50%);
@@ -96,4 +98,8 @@
       }
     }
   }
+}
+.showUpdateModal {
+  visibility: visible;
+  opacity: 1;
 }
