@@ -159,7 +159,7 @@ class App {
   #priorityColor = "#965657";
   #tasks = [];
   #taskElement;
-  #statusBackgorund;
+  #statusBackgorund = "#23ceb7";
   #ShowAdnHideTaskEl;
 
   constructor() {
@@ -212,20 +212,24 @@ class App {
 
   _taskUpdateModal(e) {
     let label;
+
     if (e.target.nodeName === "LI") {
       label = e.target;
       this.#taskElement = label;
-      toggleUpdateModal.classList.toggle("showUpdateModal");
-      task_overlay.classList.toggle("task_overlay-show");
+      task_overlay.classList.add("task_overlay-show");
     } else {
       label = e.target.closest("li");
       this.#taskElement = label;
-      toggleUpdateModal.classList.toggle("showUpdateModal");
-      task_overlay.classList.toggle("task_overlay-show");
+      task_overlay.classList.add("task_overlay-show");
     }
+    console.log(label);
+    console.log(this.#taskElement);
 
     if (this.#taskElement) {
+      toggleUpdateModal.classList.add("showUpdateModal");
+
       console.log("taskUpdateModal");
+      console.log(toggleUpdateModal);
 
       //find and return current object info which we want to update
       let taskInfo = this._getCurrentTaskObjForUpdate(this.#taskElement);
@@ -257,10 +261,13 @@ class App {
       priorityNode.style.background = this.#priorityColor;
       taskTitle.innerHTML = updatedTaskInput.value;
       statusNode.style.background = this.#statusBackgorund;
+      statusNode.innerHTML = this.#status;
       this._updatePrivateTaskArray();
-      toggleUpdateModal.classList.remove("showUpdateModal");
 
-      task_overlay.classList.remove("task_overlay-show");
+      console.log(this.#status);
+
+      this._removeOverlayAndUpdateModal();
+      this._resetNewTask();
     }
   }
   _deleteTask(e) {
@@ -291,11 +298,21 @@ class App {
     taskUlList.style.height = `0`;
 
     this._resetValuesToUpdateForm();
+
+    //hide form end overlay after delete
+    this._removeOverlayAndUpdateModal();
+  }
+  _removeOverlayAndUpdateModal() {
+    task_overlay.classList.remove("task_overlay-show");
+    toggleUpdateModal.classList.remove("showUpdateModal");
   }
 
   _updatePrivateTaskArray() {
     //updating araay of tasks
-    this.#tasks[this.#taskElement.dataset.id].save(
+
+    const updateTask = this._getCurrentTaskObjForUpdate(this.#taskElement);
+    const index = this.#tasks.findIndex((task) => task.id == updateTask.id);
+    this.#tasks[index].save(
       updatedTaskInput.value,
       updatedTaskDescription.value,
       this.#type,
@@ -343,7 +360,7 @@ class App {
             task.added = true;
             todayTasks.insertAdjacentHTML(
               "afterbegin",
-              `   <li data-id="${task.id}"  data class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"  ></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
+              `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"  ></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
             console.log("today");
             break;
@@ -428,10 +445,9 @@ class App {
 
     //hide form modal
     formModal.classList.remove("form_modal-Show");
-    //hide modal if open
-    toggleUpdateModal.classList.remove("showUpdateModal");
-    //remove overlay
-    task_overlay.classList.remove("task_overlay-show");
+
+    //remove overlay and update modals
+    this._removeOverlayAndUpdateModal();
     //removing selectors
     this._removeTitleSelectors(types, "all", "task_type-selected");
 
@@ -516,10 +532,11 @@ class App {
     this.#type = "today";
     this.#status = "To Do";
     this.#priorityColor = "#965657";
-
+    this.#statusBackgorund = "#23ceb7";
     priority.style.background = "#fff";
     priority.innerHTML = "status";
     Status.innerHTML = "To Do";
+
     setTime.innerHTML = "today";
     console.log("reseted");
   }
