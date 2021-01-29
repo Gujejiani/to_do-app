@@ -1,7 +1,7 @@
 .form_container {
   position: absolute;
-  width: 100%;
-  padding: 0 10px;
+
+  padding: 10px;
 
   transition: all 0.4s ease-in-out;
   visibility: hidden;
@@ -16,6 +16,7 @@
     border-radius: 10px;
     max-width: 500px;
     position: relative;
+    padding-top: 20px;
     &_wrap {
       display: flex;
       padding: 10px;
@@ -119,8 +120,8 @@
   visibility: visible;
   z-index: 90;
   opacity: 1;
-  transform: translate(5%, 20%);
+  transform: translate(5%, 10%);
   @media (max-width: 700px) {
-    transform: translate(-2%, 1%);
+    transform: translate(-2%, -2.5%);
   }
 }

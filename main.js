@@ -203,16 +203,20 @@ class App {
       this._updateTasksCounter(this.#type);
       this._hideForm();
       this._addTask();
+    } else {
+      taskInput.focus();
     }
     allTasks = document.querySelectorAll(".task_list-li");
     allTasks.forEach((task) => {
       task.addEventListener("click", this._taskUpdateModal.bind(this));
     });
+
+    this._resetTaskCountColor();
   }
 
   _taskUpdateModal(e) {
     let label;
-
+    console.log("task update");
     if (e.target.nodeName === "LI") {
       label = e.target;
       this.#taskElement = label;
@@ -222,14 +226,9 @@ class App {
       this.#taskElement = label;
       task_overlay.classList.add("task_overlay-show");
     }
-    console.log(label);
-    console.log(this.#taskElement);
 
     if (this.#taskElement) {
       toggleUpdateModal.classList.add("showUpdateModal");
-
-      console.log("taskUpdateModal");
-      console.log(toggleUpdateModal);
 
       //find and return current object info which we want to update
       let taskInfo = this._getCurrentTaskObjForUpdate(this.#taskElement);
@@ -410,13 +409,20 @@ class App {
       );
 
       //checking if heigth is added or not to ul element, which cotains our task lists
+
       if (taskUlList.offsetHeight === 0 && tasksCount > 0) {
         console.log(taskUlList, tasksCount);
         taskUlList.style.height = `auto`;
         count.style.transform = "translateY(120%)";
+        count.style.backgroundColor = "rgb(52 121 248)";
       } else {
         count.style.transform = "translateY(0)";
         taskUlList.style.height = `0`;
+        count.style.backgroundColor = "rgb(52 121 248)";
+      }
+      if (taskUlList.offsetHeight === 0 && tasksCount === 0) {
+        count.style.backgroundColor = "#c96567";
+        console.log("click click");
       }
     }
   }
@@ -609,6 +615,13 @@ class App {
         break;
     }
   }
+  _resetTaskCountColor() {
+    const tasksCount = document.querySelectorAll(".task_count");
+
+    tasksCount.forEach((count) => {
+      count.style.backgroundColor = "rgb(52 121 248)";
+    });
+  }
 }
 
 const app = new App();
@@ -654,8 +667,5 @@ class Task {
     this.priority = priority;
     this.priorityColor = priorityColor;
     this.statusBackground = statusBackground;
-  }
-  update() {
-    this.task = "kakha";
   }
 }
