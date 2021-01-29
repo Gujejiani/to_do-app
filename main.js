@@ -212,6 +212,7 @@ class App {
     });
 
     this._resetTaskCountColor();
+    this._saveToLocalStorage();
   }
 
   _taskUpdateModal(e) {
@@ -232,10 +233,12 @@ class App {
 
       //find and return current object info which we want to update
       let taskInfo = this._getCurrentTaskObjForUpdate(this.#taskElement);
+      this.#type = taskInfo.type;
       this._getValuesToUpdateForm(taskInfo);
     }
   }
   _getCurrentTaskObjForUpdate(taskEl) {
+    //returns current task from array
     if (taskEl) {
       let id = taskEl.dataset.id;
 
@@ -271,14 +274,15 @@ class App {
   }
   _deleteTask(e) {
     // _updateTasksCounter(type) //update count
-    console.log("deleted");
-
+    console.log(this.#taskElement);
+    console.log(this.#tasks);
     this.#taskElement.remove();
 
     this._deleteTaskFromArray();
   }
   _deleteTaskFromArray() {
     //get current task to delete
+
     const currentTask = this._getCurrentTaskObjForUpdate(this.#taskElement);
     //find index of task
     const deleteObj = this.#tasks.findIndex(
@@ -287,8 +291,9 @@ class App {
     //remove task
     this.#tasks.splice(deleteObj, 1);
     //update task counter
-    this._updateTasksCounter(this.#type);
 
+    this._updateTasksCounter(this.#type);
+    this.#type = "today"; //to make today feald default again
     const taskUlList = document.querySelector(`.${this.#timeId}`);
     let count = this.#ShowAdnHideTaskEl.nextSibling;
 
@@ -350,9 +355,8 @@ class App {
   } ///////////////////////////////////////// UPDATE PRIORITY   yyyyyyyyyyy
 
   _addTask() {
-    console.log("---------------------------");
+    console.log("add Task---------------------------");
     this.#tasks.forEach((task) => {
-      console.log(task);
       if (!task.added) {
         switch (task.type) {
           case "today":
@@ -390,7 +394,7 @@ class App {
 
   _showAndHidetasks(e) {
     const title = e.target;
-    console.log(title);
+
     const count = title.nextSibling; //task = the ul list tasks
     console.log(count);
     console.log("task clicked");
@@ -411,7 +415,6 @@ class App {
       //checking if heigth is added or not to ul element, which cotains our task lists
 
       if (taskUlList.offsetHeight === 0 && tasksCount > 0) {
-        console.log(taskUlList, tasksCount);
         taskUlList.style.height = `auto`;
         count.style.transform = "translateY(120%)";
         count.style.backgroundColor = "rgb(52 121 248)";
@@ -621,6 +624,10 @@ class App {
     tasksCount.forEach((count) => {
       count.style.backgroundColor = "rgb(52 121 248)";
     });
+  }
+
+  _saveToLocalStorage() {
+    localStorage.setItem("tasks", JSON.stringify(this.#tasks));
   }
 }
 
