@@ -148,8 +148,6 @@ const deleteTask = document.querySelector(".delete-task");
 const updateTask = document.querySelector(".update_modal");
 const toggleUpdateModal = document.querySelector(".update_wrapper");
 
-let allTasks = document.querySelectorAll(".task_list-li");
-
 class App {
   #taskID = 0;
   #timeId;
@@ -179,6 +177,7 @@ class App {
     updateStatus.addEventListener("click", this._typeSelectHandler);
     updateTask.addEventListener("submit", this._updateTask.bind(this));
     deleteTask.addEventListener("click", this._deleteTask.bind(this));
+    this._getLocalStorageData();
   }
 
   _newTaskAdded(e) {
@@ -186,37 +185,43 @@ class App {
     const description = descriptionInput.value.trim();
     const toDotask = taskInput.value;
     if (toDotask) {
-      const task = new Task(
-        this.#taskID,
-        toDotask,
-        description,
-        this.#type,
-        this.#status,
-        this.#priority,
-        this.#priorityColor,
-        this.#statusBackgorund
-      );
-      this.#taskID++;
-      console.log(this.#tasks);
-      this.#tasks.push(task);
-
+      this._addTaskToTasksArray();
       this._updateTasksCounter(this.#type);
       this._hideForm();
       this._addTask();
     } else {
       taskInput.focus();
     }
-    allTasks = document.querySelectorAll(".task_list-li");
+    this._addEvenTListenerToTasks();
+    this._resetTaskCountColor();
+    this._saveToLocalStorage();
+  }
+  _addTaskToTasksArray() {
+    const description = descriptionInput.value.trim();
+    const toDotask = taskInput.value;
+    const task = new Task(
+      this.#taskID,
+      toDotask,
+      description,
+      this.#type,
+      this.#status,
+      this.#priority,
+      this.#priorityColor,
+      this.#statusBackgorund
+    );
+    this.#tasks.push(task);
+    this.#taskID++;
+  }
+  _addEvenTListenerToTasks() {
+    let allTasks = document.querySelectorAll(".task_list-li");
     allTasks.forEach((task) => {
       task.addEventListener("click", this._taskUpdateModal.bind(this));
     });
-
-    this._resetTaskCountColor();
-    this._saveToLocalStorage();
   }
 
   _taskUpdateModal(e) {
     let label;
+
     console.log("task update");
     if (e.target.nodeName === "LI") {
       label = e.target;
@@ -243,7 +248,6 @@ class App {
       let id = taskEl.dataset.id;
 
       const task = this.#tasks.find((task) => {
-        console.log(task.id, id);
         return task.id == id;
       });
 
@@ -270,6 +274,8 @@ class App {
 
       this._removeOverlayAndUpdateModal();
       this._resetNewTask();
+      console.log(this.#tasks);
+      this._saveToLocalStorage();
     }
   }
   _deleteTask(e) {
@@ -305,6 +311,7 @@ class App {
 
     //hide form end overlay after delete
     this._removeOverlayAndUpdateModal();
+    this._saveToLocalStorage();
   }
   _removeOverlayAndUpdateModal() {
     task_overlay.classList.remove("task_overlay-show");
@@ -396,7 +403,7 @@ class App {
     const title = e.target;
 
     const count = title.nextSibling; //task = the ul list tasks
-    console.log(count);
+
     console.log("task clicked");
     //checking if title clicked
     if (title.nodeName === "H3") {
@@ -439,11 +446,18 @@ class App {
       }
     });
   }
+  _getLocalStorageData() {
+    const tasks = JSON.parse(localStorage.getItem("tasks"));
+
+    if (tasks) {
+      this._linkObjectToTaskClass(tasks);
+      this.#tasks = tasks;
+    }
+  }
 
   _toggleOverlayForm(e) {
-    task_overlay.classList.toggle("task_overlay-show");
-
     formModal.classList.toggle("form_modal-Show");
+    task_overlay.classList.add("task_overlay-show");
 
     setTimeout(() => {
       taskInput.focus();
@@ -482,7 +496,6 @@ class App {
       this.#status = list.dataset.status;
       // by children finding icon element
       this._saveStatusColor(list.dataset.status);
-      console.log(this.#statusBackgorund);
 
       this._updateStatusInUpdateModal();
       let selecTedIcon = list.children[0];
@@ -581,7 +594,7 @@ class App {
     return tasks;
   }
   _updateTasksCounter(type) {
-    const currentTasks = this._getTasksByType(this.#type); //returns filtered tasks by tyoe  today || tomorrow || nextWeek
+    const currentTasks = this._getTasksByType(type); //returns filtered tasks by tyoe  today || tomorrow || nextWeek
     const count = document.querySelector(`.${type}`).nextSibling;
     count.textContent = `${currentTasks.length}`;
   }
@@ -625,16 +638,31 @@ class App {
       count.style.backgroundColor = "rgb(52 121 248)";
     });
   }
+  _counerUpdate() {
+    this._updateTasksCounter("today");
+    this._updateTasksCounter("tomorrow");
+    this._updateTasksCounter("nextWeek");
+  }
 
   _saveToLocalStorage() {
     localStorage.setItem("tasks", JSON.stringify(this.#tasks));
+  }
+  _linkObjectToTaskClass(tasks) {
+    setTimeout(() => {
+      tasks.forEach((task) => {
+        task.added = false;
+        task.__proto__ = new Task();
+      });
+      this._addTask();
+      this._counerUpdate();
+      this._addEvenTListenerToTasks();
+    }, 100);
   }
 }
 
 const app = new App();
 
 class Task {
-  #tasks = [];
   constructor(
     id,
     task,
