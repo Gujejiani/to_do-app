@@ -105,11 +105,13 @@
           cursor: pointer;
           display: inline-block;
           border-radius: 10px;
+          padding-top: 2px;
           width: 100px;
           height: 20px;
           text-align: center;
-          color: $theme_1;
-          font-weight: bolder;
+          color: #28928d;
+
+          font-weight: bold;
         }
       }
     }

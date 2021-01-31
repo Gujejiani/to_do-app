@@ -248,6 +248,16 @@ a {
     height: 100%; }
   .task-title {
     cursor: pointer; }
+    .task-title .sort {
+      position: absolute;
+      right: -30px;
+      color: #3479f8;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out; }
+    .task-title .show-sort {
+      visibility: visible;
+      opacity: 1; }
     .task-title:hover {
       color: #085af1; }
   .task_list {
@@ -304,6 +314,9 @@ a {
   font-weight: normal;
   font-size: 15px;
   transition: all 0.3s ease-in-out; }
+
+.count {
+  background-color: #c96567; }
 
 .task_title_clicked {
   color: #085af1; }
@@ -421,11 +434,12 @@ a {
           cursor: pointer;
           display: inline-block;
           border-radius: 10px;
+          padding-top: 2px;
           width: 100px;
           height: 20px;
           text-align: center;
-          color: #187b94;
-          font-weight: bolder; }
+          color: #28928d;
+          font-weight: bold; }
 
 .form_modal-Show {
   visibility: visible;
@@ -534,9 +548,9 @@ a {
   .priority_wrapper .priority_list li:nth-child(1) {
     background-color: #965657; }
   .priority_wrapper .priority_list li:nth-child(2) {
-    background-color: #c96567; }
-  .priority_wrapper .priority_list li:nth-child(3) {
     background-color: #e8a87c; }
+  .priority_wrapper .priority_list li:nth-child(3) {
+    background-color: #2880a3; }
   .priority_wrapper .priority_list li:nth-child(4) {
     background-color: #85dccb; }
   .priority_wrapper .priority_list {

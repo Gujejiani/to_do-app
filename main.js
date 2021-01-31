@@ -147,7 +147,7 @@ const setPriorityUpdate = document.querySelector(".update_priority"); //
 const deleteTask = document.querySelector(".delete-task");
 const updateTask = document.querySelector(".update_modal");
 const toggleUpdateModal = document.querySelector(".update_wrapper");
-
+const sorts = document.querySelectorAll(".sort");
 class App {
   #taskID = 0;
   #timeId;
@@ -178,6 +178,7 @@ class App {
     updateTask.addEventListener("submit", this._updateTask.bind(this));
     deleteTask.addEventListener("click", this._deleteTask.bind(this));
     this._getLocalStorageData();
+    this._sortListener();
   }
 
   _newTaskAdded(e) {
@@ -188,7 +189,8 @@ class App {
       this._addTaskToTasksArray();
       this._updateTasksCounter(this.#type);
       this._hideForm();
-      this._addTask();
+      this._addTask(this.#tasks);
+      this._sortListener();
     } else {
       taskInput.focus();
     }
@@ -196,7 +198,42 @@ class App {
     this._resetTaskCountColor();
     this._saveToLocalStorage();
   }
+  _genereteIDForTasks() {
+    this.#taskID = 0;
+    if (this.#tasks[0]) {
+      let Max = Math.max(...this.#tasks.map((task) => task.id));
+
+      this.#taskID = Max + 1;
+      console.log(this.#taskID, Max);
+    }
+  }
+  _sortListener() {
+    sorts.forEach((sort) => {
+      sort.addEventListener("click", this._sortItems.bind(this));
+    });
+  }
+  _sortItems(e) {
+    const parrent = e.target.dataset.id;
+    const type = e.target.dataset.type;
+    // e.target.dataset.id = "badri";
+    // console.log(e.target);
+    let sortArray = this.#tasks.filter((task) => task.type === type);
+    const sorted = sortArray.sort((a, b) => {
+      if (a.priority.length > b.priority.length) return 1;
+      if (a.priority.length < b.priority.length) return -1;
+    });
+
+    document.querySelector(`.${parrent}`).innerHTML = "";
+    sorted.forEach((item) => {
+      item.added = false;
+    });
+    this._addTask(sorted);
+    this._addEvenTListenerToTasks();
+  }
+
   _addTaskToTasksArray() {
+    this._genereteIDForTasks();
+
     const description = descriptionInput.value.trim();
     const toDotask = taskInput.value;
     const task = new Task(
@@ -210,7 +247,6 @@ class App {
       this.#statusBackgorund
     );
     this.#tasks.push(task);
-    this.#taskID++;
   }
   _addEvenTListenerToTasks() {
     let allTasks = document.querySelectorAll(".task_list-li");
@@ -225,22 +261,27 @@ class App {
     console.log("task update");
     if (e.target.nodeName === "LI") {
       label = e.target;
-      this.#taskElement = label;
-      task_overlay.classList.add("task_overlay-show");
+      this._toggleUpdateModal(label);
     } else {
       label = e.target.closest("li");
-      this.#taskElement = label;
-      task_overlay.classList.add("task_overlay-show");
+      this._toggleUpdateModal(label);
     }
 
     if (this.#taskElement) {
       toggleUpdateModal.classList.add("showUpdateModal");
-
+      updatedTaskInput.focus();
       //find and return current object info which we want to update
       let taskInfo = this._getCurrentTaskObjForUpdate(this.#taskElement);
       this.#type = taskInfo.type;
       this._getValuesToUpdateForm(taskInfo);
     }
+  }
+  _toggleUpdateModal(lab) {
+    this.#taskElement = lab;
+    task_overlay.classList.add("task_overlay-show");
+    setTimeout(() => {
+      updatedTaskInput.focus();
+    }, 100);
   }
   _getCurrentTaskObjForUpdate(taskEl) {
     //returns current task from array
@@ -280,15 +321,13 @@ class App {
   }
   _deleteTask(e) {
     // _updateTasksCounter(type) //update count
-    console.log(this.#taskElement);
-    console.log(this.#tasks);
+
     this.#taskElement.remove();
 
     this._deleteTaskFromArray();
   }
   _deleteTaskFromArray() {
     //get current task to delete
-
     const currentTask = this._getCurrentTaskObjForUpdate(this.#taskElement);
     //find index of task
     const deleteObj = this.#tasks.findIndex(
@@ -300,12 +339,10 @@ class App {
 
     this._updateTasksCounter(this.#type);
     this.#type = "today"; //to make today feald default again
-    const taskUlList = document.querySelector(`.${this.#timeId}`);
-    let count = this.#ShowAdnHideTaskEl.nextSibling;
-
-    count.style.transform = "translateY(0)";
-
-    taskUlList.style.height = `0`;
+    // const taskUlList = document.querySelector(`.${this.#timeId}`);
+    // let count = this.#ShowAdnHideTaskEl.nextSibling;
+    // // count.style.transform = "translateY(0)";
+    // // taskUlList.style.height = `0`;
 
     this._resetValuesToUpdateForm();
 
@@ -361,9 +398,9 @@ class App {
     setPriorityUpdate.style.background = this.#priorityColor;
   } ///////////////////////////////////////// UPDATE PRIORITY   yyyyyyyyyyy
 
-  _addTask() {
+  _addTask(tasks) {
     console.log("add Task---------------------------");
-    this.#tasks.forEach((task) => {
+    tasks.forEach((task) => {
       if (!task.added) {
         switch (task.type) {
           case "today":
@@ -403,6 +440,7 @@ class App {
     const title = e.target;
 
     const count = title.nextSibling; //task = the ul list tasks
+    const sortIcon = title.childNodes[1];
 
     console.log("task clicked");
     //checking if title clicked
@@ -424,15 +462,16 @@ class App {
       if (taskUlList.offsetHeight === 0 && tasksCount > 0) {
         taskUlList.style.height = `auto`;
         count.style.transform = "translateY(120%)";
-        count.style.backgroundColor = "rgb(52 121 248)";
+        count.style.backgroundColor = "rgb(52, 121, 248)";
+        sortIcon.classList.toggle("show-sort");
       } else {
         count.style.transform = "translateY(0)";
         taskUlList.style.height = `0`;
-        count.style.backgroundColor = "rgb(52 121 248)";
+        count.style.backgroundColor = "rgb(52, 121, 248)";
+        sortIcon.classList.remove("show-sort");
       }
       if (taskUlList.offsetHeight === 0 && tasksCount === 0) {
         count.style.backgroundColor = "#c96567";
-        console.log("click click");
       }
     }
   }
@@ -452,12 +491,14 @@ class App {
     if (tasks) {
       this._linkObjectToTaskClass(tasks);
       this.#tasks = tasks;
+      this._couneterUpdate();
     }
   }
 
   _toggleOverlayForm(e) {
     formModal.classList.toggle("form_modal-Show");
     task_overlay.classList.add("task_overlay-show");
+    console.log(this.#tasks);
 
     setTimeout(() => {
       taskInput.focus();
@@ -549,8 +590,7 @@ class App {
   }
   _resetNewTask() {
     descriptionInput.value = taskInput.value = "";
-    this.#priority = "";
-
+    this.#priority = "important";
     this.#type = "today";
     this.#status = "To Do";
     this.#priorityColor = "#965657";
@@ -618,7 +658,7 @@ class App {
         this.#priorityColor = "#965657";
         break;
       case "Family":
-        this.#priorityColor = "#c96567";
+        this.#priorityColor = "#2880a3";
         break;
       case "Deadline":
         this.#priorityColor = "#e8a87c";
@@ -638,7 +678,7 @@ class App {
       count.style.backgroundColor = "rgb(52 121 248)";
     });
   }
-  _counerUpdate() {
+  _couneterUpdate() {
     this._updateTasksCounter("today");
     this._updateTasksCounter("tomorrow");
     this._updateTasksCounter("nextWeek");
@@ -651,11 +691,13 @@ class App {
     setTimeout(() => {
       tasks.forEach((task) => {
         task.added = false;
-        task.__proto__ = new Task();
+        Object.setPrototypeOf(task, new Task());
+        // task.__proto__ = new Task();
       });
-      this._addTask();
-      this._counerUpdate();
+      this._addTask(this.#tasks);
+
       this._addEvenTListenerToTasks();
+      console.log("local storage used");
     }, 100);
   }
 }

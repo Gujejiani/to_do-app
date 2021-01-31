@@ -22,6 +22,18 @@
 
   &-title {
     cursor: pointer;
+    .sort {
+      position: absolute;
+      right: -30px;
+      color: rgb(52, 121, 248);
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .show-sort {
+      visibility: visible;
+      opacity: 1;
+    }
     &:hover {
       color: darken($task_btn, 10%);
     }
@@ -81,6 +93,9 @@
   font-weight: normal;
   font-size: 15px;
   transition: all 0.3s ease-in-out;
+}
+.count {
+  background-color: #c96567;
 }
 
 .task_title_clicked {
