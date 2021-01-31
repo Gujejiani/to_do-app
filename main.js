@@ -222,7 +222,6 @@ class App {
       if (a.priority.length > b.priority.length) return 1;
       if (a.priority.length < b.priority.length) return -1;
     });
-
     document.querySelector(`.${parrent}`).innerHTML = "";
     sorted.forEach((item) => {
       item.added = false;

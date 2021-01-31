@@ -222,7 +222,8 @@ a {
     margin: auto;
     background-color: #eeebeb;
     border-radius: 10px;
-    position: relative; }
+    position: relative;
+    overflow: auto; }
 
 .task_container {
   padding: 10px;
@@ -233,8 +234,8 @@ a {
 
 .tasks_wrapper {
   padding: 20px 30px;
-  height: 100%;
-  position: relative; }
+  position: relative;
+  max-height: 460px; }
 
 .task {
   position: relative; }
