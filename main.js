@@ -181,6 +181,7 @@ class App {
     deleteTask.addEventListener("click", this._deleteTask.bind(this));
     this._getLocalStorageData();
     this._sortListener();
+    this._binsAddEvenlisteners();
   }
 
   _ulHeightUpdate(type) {
@@ -658,8 +659,8 @@ class App {
     this.#status = "To Do";
     this.#priorityColor = "#965657";
     this.#statusBackgorund = "#23ceb7";
-    priority.style.background = "#fff";
-    priority.innerHTML = "status";
+    priority.style.background = "#965657";
+    priority.innerHTML = "important";
     Status.innerHTML = "To Do";
 
     setTime.innerHTML = "today";
@@ -741,13 +742,14 @@ class App {
       count.style.backgroundColor = "rgb(52 121 248)";
     });
   }
-  _binResetTasks(e) {
-    console.log(e.target);
-  }
+
   _binsAddEvenlisteners() {
     bins.forEach((bin) => {
-      bin.addEventListener("click", this._binResetTasks());
+      bin.addEventListener("click", this._binResetTasks.bind(this));
     });
+  }
+  _binResetTasks(e) {
+    console.log(e.target);
   }
   _couneterUpdate() {
     this._updateTasksCounter("today");
