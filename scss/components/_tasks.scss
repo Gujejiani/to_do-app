@@ -2,7 +2,6 @@
   padding: 20px 30px;
   position: relative;
   max-height: 460px;
-
   // overflow: scroll;
 }
 .task_container {
@@ -133,6 +132,7 @@
   color: rgb(52, 121, 248);
   visibility: hidden;
   opacity: 0;
+  z-index: 1;
 
   transition: all 0.6s ease-in-out;
   top: 16px;

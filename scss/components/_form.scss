@@ -38,6 +38,7 @@
     }
     .form_about {
       flex: 3;
+
       border-right: 2px solid #f2f5f2;
       padding: 0 10px;
       &-task {
@@ -47,6 +48,9 @@
         @include form_btn(13px);
         @include textArea;
         padding-left: 0;
+        @media (max-width: 700px) {
+          padding-bottom: 30px;
+        }
 
         &::placeholder {
           margin: auto;
@@ -64,6 +68,9 @@
         padding: 20px;
         flex-flow: wrap;
         color: rgb(6, 96, 138);
+        @media (max-width: 600px) {
+          justify-content: center;
+        }
 
         .type {
           background-color: rgb(255, 254, 254);
@@ -71,6 +78,9 @@
           border-radius: 10px;
           box-shadow: 1px 1px 5px 1px rgb(189, 217, 230);
           margin-bottom: 30px;
+          @media (max-width: 600px) {
+            margin-bottom: 15px;
+          }
           cursor: pointer;
 
           i {
@@ -93,7 +103,7 @@
       align-items: center;
       div {
         margin-bottom: 30px;
-        width: 100px;
+        width: 90px;
         text-align: center;
         cursor: pointer;
         z-index: 32;

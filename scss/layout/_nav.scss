@@ -7,3 +7,26 @@
     @include title;
   }
 }
+.nav_ul {
+  @include flexPos(space-between);
+
+  &-li {
+    position: relative;
+    a {
+      padding-bottom: 5px;
+      @include title;
+      &:hover {
+        &::after {
+          content: "";
+          display: inline-block;
+          width: 40px;
+          height: 1px;
+          background-color: $theme_1-text;
+          position: absolute;
+          @include posAlignCenter(translate(-50%));
+          top: 29px;
+        }
+      }
+    }
+  }
+}
