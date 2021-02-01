@@ -1,16 +1,16 @@
-.task_container {
-  padding: 10px;
-  color: #000;
-  font-weight: bold;
-  font-size: 1.5rem;
-  z-index: -1;
-}
 .tasks_wrapper {
   padding: 20px 30px;
   position: relative;
   max-height: 460px;
 
   // overflow: scroll;
+}
+.task_container {
+  padding: 10px;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: relative;
 }
 
 .task {
@@ -22,28 +22,48 @@
   }
 
   &-title {
+    &:hover {
+      color: darken($task_btn, 10%);
+    }
     cursor: pointer;
     .sort {
       position: absolute;
       right: -30px;
+      top: 30px;
       color: rgb(52, 121, 248);
       visibility: hidden;
       opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      transition: opacity 0.6s ease-in-out;
     }
     .show-sort {
       visibility: visible;
       opacity: 1;
-    }
-    &:hover {
-      color: darken($task_btn, 10%);
+      &::after {
+        content: "sort by importance";
+        display: inline-block;
+        position: absolute;
+        right: 10px;
+        top: -15px;
+        font-size: 12px;
+        width: 100px;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        font-family: fantasy sans-serif;
+      }
+      &:hover {
+        &::after {
+          visibility: visible;
+          opacity: 0.7;
+        }
+      }
     }
   }
   &_list {
     height: 0;
-    transition: all 0.9s ease-in-out;
+    transition: all 0.6s ease-in-out;
     overflow: hidden;
-    transition: all 0.9s ease-in-out;
+    transition: all 0.6s ease-in-out;
     &-li {
       padding: 10px 60px;
       color: #000;
@@ -53,7 +73,7 @@
       margin-bottom: 2px;
       display: flex;
       justify-content: space-between;
-      transition: all 0.9s ease-in-out;
+      transition: all 0.6s ease-in-out;
 
       .task_status {
         color: rgb(236, 222, 222);
@@ -68,8 +88,8 @@
       .priority {
         position: absolute;
         left: 2px;
-        top: 0;
-        height: 90%;
+        top: 1px;
+        height: 88%;
         width: 5px;
         border-radius: 20px;
       }
@@ -93,7 +113,7 @@
   color: #f3f3f3;
   font-weight: normal;
   font-size: 15px;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.6s ease-in-out;
 }
 .count {
   background-color: #c96567;
@@ -104,4 +124,40 @@
 }
 .hidden {
   visibility: hidden;
+}
+
+.trash {
+  position: absolute;
+  left: 40px;
+  z-index: 1300;
+  color: rgb(52, 121, 248);
+  visibility: hidden;
+  opacity: 0;
+
+  transition: all 0.6s ease-in-out;
+  top: 16px;
+  left: -10px;
+  cursor: pointer;
+  &::after {
+    content: "clear";
+    display: inline-block;
+    position: absolute;
+    left: -5px;
+    top: -15px;
+    font-size: 12px;
+    opacity: 0;
+    color: #724141;
+    transition: opacity 0.6s ease-in-out;
+  }
+  &:hover {
+    color: #724141;
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.bin-show {
+  visibility: visible;
+  opacity: 0.7;
 }

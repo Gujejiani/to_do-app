@@ -132,7 +132,7 @@ const setTime = document.querySelector(".set-time");
 //tasks parrents
 const todayTasks = document.querySelector(".today_task-list");
 const tomorrowTasks = document.querySelector(".tomorrow_task-list");
-const nextWeekTasks = document.querySelector(".next_week-task");
+const nextWeekTasks = document.querySelector(".nextWeek_task-list");
 
 // task Update
 const updatedTaskInput = document.querySelector(".task_input");
@@ -148,6 +148,8 @@ const deleteTask = document.querySelector(".delete-task");
 const updateTask = document.querySelector(".update_modal");
 const toggleUpdateModal = document.querySelector(".update_wrapper");
 const sorts = document.querySelectorAll(".sort");
+
+const bins = document.querySelectorAll(".trash");
 class App {
   #taskID = 0;
   #timeId;
@@ -181,15 +183,56 @@ class App {
     this._sortListener();
   }
 
+  _ulHeightUpdate(type) {
+    console.log("ul heigth updated " + type);
+    const el = this.#ShowAdnHideTaskEl
+      ? this.#ShowAdnHideTaskEl.classList.contains("task_title_clicked")
+      : null;
+    const bin = document.querySelector(`.${type}-bin`);
+    console.log(el);
+    console.log(this);
+    if (this.#timeId && el) {
+      const ul = document.querySelector(`.${type}_task-list`);
+      ul.style.height = `${ul.childElementCount * 43}px`;
+      let tasks = ul.childElementCount;
+      let sort = this.#ShowAdnHideTaskEl.childNodes[1];
+      let count = this.#ShowAdnHideTaskEl.nextSibling;
+      console.log(type, this.#timeId);
+      if (tasks < 2) {
+        sort.classList.remove("show-sort");
+        document.querySelector(`.${type}-bin`).classList.remove("bin-show");
+      } else if (
+        tasks === 2 &&
+        this.#ShowAdnHideTaskEl.classList.contains(`${bin.dataset.bin}`)
+      ) {
+        bin.classList.add("bin-show");
+        sort.classList.add("show-sort");
+        console.log();
+        console.log(el.classList);
+      }
+      if (tasks === 0) {
+        count.style.transform = "translateY(0)";
+        count.style.backgroundColor = "rgb(52, 121, 248)";
+      }
+    }
+  }
   _newTaskAdded(e) {
     e.preventDefault();
+    const ul = document.querySelector(`.${this.#timeId}`);
+    //checking if ul is empty
+    let ulTasksCount = ul ? ul.childElementCount : null;
+    if (ulTasksCount < 1) {
+      this._removeTitleSelectors(tasksTitle, "all", "task_title_clicked");
+    }
     const description = descriptionInput.value.trim();
     const toDotask = taskInput.value;
     if (toDotask) {
       this._addTaskToTasksArray();
+
+      this._addTask(this.#tasks);
+      this._ulHeightUpdate(this.#type);
       this._updateTasksCounter(this.#type);
       this._hideForm();
-      this._addTask(this.#tasks);
       this._sortListener();
     } else {
       taskInput.focus();
@@ -207,6 +250,24 @@ class App {
       console.log(this.#taskID, Max);
     }
   }
+  _closeTasksUl() {
+    const taskContainer = document.querySelectorAll(".task_list");
+    taskContainer.forEach((ul) => {
+      ul.style.height = "0";
+    });
+    bins.forEach((bin) => {
+      bin.classList.remove("bin-show");
+    });
+    sorts.forEach((sort) => {
+      sort.classList.remove("show-sort");
+    });
+    this._removeTitleSelectors(tasksTitle, "all", "task_title_clicked");
+    const tasksCount = document.querySelectorAll(".task_count");
+    tasksCount.forEach((count) => {
+      count.style.transform = "translateY(0)";
+    });
+  }
+
   _sortListener() {
     sorts.forEach((sort) => {
       sort.addEventListener("click", this._sortItems.bind(this));
@@ -322,7 +383,8 @@ class App {
     // _updateTasksCounter(type) //update count
 
     this.#taskElement.remove();
-
+    console.log(this.#type);
+    this._ulHeightUpdate(this.#type);
     this._deleteTaskFromArray();
   }
   _deleteTaskFromArray() {
@@ -337,16 +399,13 @@ class App {
     //update task counter
 
     this._updateTasksCounter(this.#type);
-    this.#type = "today"; //to make today feald default again
-    // const taskUlList = document.querySelector(`.${this.#timeId}`);
-    // let count = this.#ShowAdnHideTaskEl.nextSibling;
-    // // count.style.transform = "translateY(0)";
-    // // taskUlList.style.height = `0`;
+    this.#type = "today";
 
     this._resetValuesToUpdateForm();
 
     //hide form end overlay after delete
     this._removeOverlayAndUpdateModal();
+
     this._saveToLocalStorage();
   }
   _removeOverlayAndUpdateModal() {
@@ -424,7 +483,7 @@ class App {
               "afterbegin",
               `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
-            console.log("next WEek");
+            console.log("next Week");
             break;
 
           default:
@@ -437,15 +496,15 @@ class App {
 
   _showAndHidetasks(e) {
     const title = e.target;
-
     const count = title.nextSibling; //task = the ul list tasks
-    const sortIcon = title.childNodes[1];
+    const sortIcon = title.childNodes[1]; // today || tomorrow   || nextWeek
 
     console.log("task clicked");
     //checking if title clicked
     if (title.nodeName === "H3") {
       this.#ShowAdnHideTaskEl = e.target;
       this.#timeId = title.dataset.id;
+      const bin = document.querySelector(`.${sortIcon.dataset.type}-bin`); // today-bin || tomorrow-bin   || nextWeek-bin
       title.classList.toggle("task_title_clicked");
       const taskUlList = document.querySelector(`.${this.#timeId}`);
       let tasksCount = taskUlList.childElementCount;
@@ -459,15 +518,20 @@ class App {
       //checking if heigth is added or not to ul element, which cotains our task lists
 
       if (taskUlList.offsetHeight === 0 && tasksCount > 0) {
-        taskUlList.style.height = `auto`;
+        taskUlList.style.height = `${tasksCount * 43}px`;
         count.style.transform = "translateY(120%)";
         count.style.backgroundColor = "rgb(52, 121, 248)";
-        sortIcon.classList.toggle("show-sort");
+        if (tasksCount > 1) {
+          sortIcon.classList.add("show-sort");
+          bin.classList.add("bin-show");
+        }
       } else {
         count.style.transform = "translateY(0)";
-        taskUlList.style.height = `0`;
         count.style.backgroundColor = "rgb(52, 121, 248)";
+        taskUlList.style.height = `0`;
         sortIcon.classList.remove("show-sort");
+        bin.classList.remove("bin-show");
+        this.#ShowAdnHideTaskEl.classList.remove("task_title_clicked");
       }
       if (taskUlList.offsetHeight === 0 && tasksCount === 0) {
         count.style.backgroundColor = "#c96567";
@@ -498,7 +562,7 @@ class App {
     formModal.classList.toggle("form_modal-Show");
     task_overlay.classList.add("task_overlay-show");
     console.log(this.#tasks);
-
+    this._closeTasksUl();
     setTimeout(() => {
       taskInput.focus();
     }, 30);
@@ -675,6 +739,14 @@ class App {
 
     tasksCount.forEach((count) => {
       count.style.backgroundColor = "rgb(52 121 248)";
+    });
+  }
+  _binResetTasks(e) {
+    console.log(e.target);
+  }
+  _binsAddEvenlisteners() {
+    bins.forEach((bin) => {
+      bin.addEventListener("click", this._binResetTasks());
     });
   }
   _couneterUpdate() {

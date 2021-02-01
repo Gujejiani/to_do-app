@@ -225,17 +225,17 @@ a {
     position: relative;
     overflow: auto; }
 
+.tasks_wrapper {
+  padding: 20px 30px;
+  position: relative;
+  max-height: 460px; }
+
 .task_container {
   padding: 10px;
   color: #000;
   font-weight: bold;
   font-size: 1.5rem;
-  z-index: -1; }
-
-.tasks_wrapper {
-  padding: 20px 30px;
-  position: relative;
-  max-height: 460px; }
+  position: relative; }
 
 .task {
   position: relative; }
@@ -249,23 +249,39 @@ a {
     height: 100%; }
   .task-title {
     cursor: pointer; }
+    .task-title:hover {
+      color: #085af1; }
     .task-title .sort {
       position: absolute;
       right: -30px;
+      top: 30px;
       color: #3479f8;
       visibility: hidden;
       opacity: 0;
-      transition: opacity 0.3s ease-in-out; }
+      transition: opacity 0.6s ease-in-out; }
     .task-title .show-sort {
       visibility: visible;
       opacity: 1; }
-    .task-title:hover {
-      color: #085af1; }
+      .task-title .show-sort::after {
+        content: "sort by importance";
+        display: inline-block;
+        position: absolute;
+        right: 10px;
+        top: -15px;
+        font-size: 12px;
+        width: 100px;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        font-family: fantasy sans-serif; }
+      .task-title .show-sort:hover::after {
+        visibility: visible;
+        opacity: 0.7; }
   .task_list {
     height: 0;
-    transition: all 0.9s ease-in-out;
+    transition: all 0.6s ease-in-out;
     overflow: hidden;
-    transition: all 0.9s ease-in-out; }
+    transition: all 0.6s ease-in-out; }
     .task_list-li {
       padding: 10px 60px;
       color: #000;
@@ -275,7 +291,7 @@ a {
       margin-bottom: 2px;
       display: flex;
       justify-content: space-between;
-      transition: all 0.9s ease-in-out; }
+      transition: all 0.6s ease-in-out; }
       .task_list-li .task_status {
         color: #ecdede;
         background-color: #23ceb7;
@@ -294,8 +310,8 @@ a {
       .task_list-li .priority {
         position: absolute;
         left: 2px;
-        top: 0;
-        height: 90%;
+        top: 1px;
+        height: 88%;
         width: 5px;
         border-radius: 20px; }
       .task_list-li:hover {
@@ -314,7 +330,7 @@ a {
   color: #f3f3f3;
   font-weight: normal;
   font-size: 15px;
-  transition: all 0.3s ease-in-out; }
+  transition: all 0.6s ease-in-out; }
 
 .count {
   background-color: #c96567; }
@@ -324,6 +340,36 @@ a {
 
 .hidden {
   visibility: hidden; }
+
+.trash {
+  position: absolute;
+  left: 40px;
+  z-index: 1300;
+  color: #3479f8;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.6s ease-in-out;
+  top: 16px;
+  left: -10px;
+  cursor: pointer; }
+  .trash::after {
+    content: "clear";
+    display: inline-block;
+    position: absolute;
+    left: -5px;
+    top: -15px;
+    font-size: 12px;
+    opacity: 0;
+    color: #724141;
+    transition: opacity 0.6s ease-in-out; }
+  .trash:hover {
+    color: #724141; }
+    .trash:hover::after {
+      opacity: 1; }
+
+.bin-show {
+  visibility: visible;
+  opacity: 0.7; }
 
 .form_container {
   position: absolute;
@@ -384,12 +430,16 @@ a {
         padding-bottom: 30px;
         padding-top: 10px;
         padding-left: 0;
-        margin-bottom: 80px; }
+        margin-bottom: 80px;
+        padding-left: 0; }
         .form_container .form .form_about-description:focus {
           background-color: #eeeee8;
           border: 1px solid #0299be; }
         .form_container .form .form_about-description::placeholder {
           font-size: 13px; }
+        .form_container .form .form_about-description::placeholder {
+          margin: auto;
+          text-align: center; }
       .form_container .form .form_about-title {
         display: inline-block;
         padding: 5px;
@@ -428,10 +478,10 @@ a {
         .form_container .form .form_details div:nth-child(3) {
           cursor: unset; }
         .form_container .form .form_details div h4 {
-          font-size: 12px;
+          font-size: 13px;
           color: #115768;
           padding-bottom: 2px; }
-        .form_container .form .form_details div label {
+        .form_container .form .form_details div .label {
           cursor: pointer;
           display: inline-block;
           border-radius: 10px;
@@ -441,6 +491,9 @@ a {
           text-align: center;
           color: #28928d;
           font-weight: bold; }
+        .form_container .form .form_details div .priority {
+          background-color: #965657;
+          color: #fff; }
 
 .form_modal-Show {
   visibility: visible;

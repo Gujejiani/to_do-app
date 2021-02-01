@@ -39,22 +39,22 @@
            <li class="type" data-id="nextWeek" ><i class="fas fa-bell"></i>next Week</li>
          </ul>
          <label class="form_about-title" for="description">Description</label>
-         <textarea cols="70" rows="50" type="text" id="description" name="description" placeholder="add description.." class="form_about-description" >
+         <textarea cols="70" rows="50" id="description" name="description" placeholder="add description.." class="form_about-description" >
          </textarea>
           </div>
          <div class="form_details" >
           <div class="form_details_types set-status">
             <h4 class="form_details_type-title " >set status</h4>
-              <label class="form_details_types-type status ">To Do</label>
+              <label class="label form_details_types-type status ">To Do</label>
           </div>
           <div class="form_details_status set-priority">
             <h4 class="form_details_status-title " >set importance</h4>
-              <label class="form_details_time-set priority ">status</label>
+              <label class="label form_details_time-set priority ">important</label>
           </div>
 
           <div class="form_details_time ">
             <h4 class="form_details_time-title"  > Time</h4>
-              <label class="form_details_time-set set-time">Today </label>
+              <label class="label form_details_time-set set-time">Today </label>
           </div>
          
          </div>
@@ -116,13 +116,15 @@
         <div class="task_container">
           <div class="task today_task">
             <div class="task_description">
-              <h3 class="task-title today" data-id="today_task-list" >Today<i class="fas fa-sort-amount-down-alt sort" data-type="today"  data-id="today_task-list"></i></h3><span  class="task_count">0</span>
+              <h3 class="task-title today" data-id="today_task-list" >Today<i class="fas fa-sort-amount-down-alt sort" data-type="today"  data-id="today_task-list"><span></i></h3><span  class="task_count">0</span>
             </div>
             <ul class="task_list today_task-list">
               <!-- `   <li class="task_list-li"><span class="priority" style="background-color:${priorityColor};"  ></span> ${task} <span class="task_status"  style="background-color:${statusColor};">${status}</span>  </li>` -->
 
             </ul>
+          
           </div>
+          <i class="fa fa-trash trash today-bin fa-xs" data-bin="today" aria-hidden="true"></i>
         </div>
          <!-- End Today Tasks -->
 
@@ -139,22 +141,24 @@
               
             </ul>
           </div>
+          <i class="fa fa-trash trash tomorrow-bin  fa-xs" aria-hidden="true" data-bin="tomorrow"></i>
         </div>
          <!-- End Tomorrow Tasks -->
          <!-- Next Week Tasks -->
         <div class="task_container">
           <div class="task ">
             <div class="task_description">
-              <h3 class="task-title nextWeek" data-id="next_week-task" >Next Week<i class="fas fa-sort-amount-down-alt sort" data-type="nextWeek" data-id="next_week-task"></i></h3><span class="task_count">0</span>
+              <h3 class="task-title nextWeek" data-id="nextWeek_task-list" >Next Week<i class="fas fa-sort-amount-down-alt sort" data-type="nextWeek" data-id="nextWeek_task-list"></i></h3><span class="task_count">0</span>
             </div>
-            <ul class="task_list next_week-task">
+            <ul class="task_list nextWeek_task-list">
              
-              
+            
             </ul>
           </div>
+          <i class="fa fa-trash trash nextWeek-bin  fa-xs" data-bin="nextWeek" aria-hidden="true"></i>
         </div>
-      
-         <!-- Next Week Tasks -->
+     
+         <!-- End of Next Week Tasks -->
         </div>
      
       </div>

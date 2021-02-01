@@ -46,6 +46,12 @@
       &-description {
         @include form_btn(13px);
         @include textArea;
+        padding-left: 0;
+
+        &::placeholder {
+          margin: auto;
+          text-align: center;
+        }
       }
       &-title {
         display: inline-block;
@@ -95,12 +101,12 @@
           cursor: unset;
         }
         h4 {
-          font-size: 12px;
+          font-size: 13px;
           color: darken($theme_1, 10%);
 
           padding-bottom: 2px;
         }
-        label {
+        .label {
           cursor: pointer;
           display: inline-block;
           border-radius: 10px;
@@ -111,6 +117,10 @@
           color: #28928d;
 
           font-weight: bold;
+        }
+        .priority {
+          background-color: #965657;
+          color: #fff;
         }
       }
     }
