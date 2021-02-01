@@ -749,7 +749,24 @@ class App {
     });
   }
   _binResetTasks(e) {
-    console.log(e.target);
+    // 1.  get time type  which value to reset
+    const type = e.target.dataset.bin;
+    console.log(type);
+    // 2. filter tasks and only get those types which don"t match to our reset type
+    const filteredTaks = this.#tasks.filter((task) => task.type !== type);
+    console.log(filteredTaks);
+    // 3. update tasks
+    this.#tasks = filteredTaks;
+    // 4. remove filtered aitems from dom
+    const ul = document.querySelector(`.${type}_task-list`);
+    ul.innerHTML = "";
+    // 5. reset Type ul and other elements
+    this._closeTasksUl();
+    // 6. update data in local storage
+    this._saveToLocalStorage();
+
+    // 7. update task counter
+    this._updateTasksCounter(type);
   }
   _couneterUpdate() {
     this._updateTasksCounter("today");
