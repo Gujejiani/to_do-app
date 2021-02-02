@@ -90,6 +90,49 @@ function addStylesFromLocalStorage() {
 }
 ////////////////////////////////////////// Theme End /////////////////////////////////////////////////////
 
+class Task {
+  constructor(
+    id,
+    task,
+    description,
+    type,
+    status,
+    priority,
+    priorityColor,
+    statusBackground
+  ) {
+    this.id = id;
+    this.task = task;
+    this.description = description;
+    this.type = type;
+    this.status = status;
+    this.priority = priority;
+    this.priorityColor = priorityColor;
+    this.statusBackground = statusBackground;
+  }
+
+  fetchAll() {
+    return this;
+  }
+  save(
+    task,
+    description,
+    type,
+    status,
+    priority,
+    priorityColor,
+    statusBackground
+  ) {
+    this.task = task;
+    this.description = description;
+    this.type = type;
+    this.status = status;
+    this.priority = priority;
+    this.priorityColor = priorityColor;
+    this.statusBackground = statusBackground;
+  }
+}
+
 const createTask = document.querySelector(".create_task");
 const tasks_Wrapper = document.querySelector(".tasks_wrapper");
 const tasksTitle = document.querySelectorAll(".task-title");
@@ -186,35 +229,34 @@ class App {
 
   _ulHeightUpdate(type) {
     console.log("ul heigth updated " + type);
-    const el = this.#ShowAdnHideTaskEl
+    const el = this.#ShowAdnHideTaskEl //h3 title of tasks
       ? this.#ShowAdnHideTaskEl.classList.contains("task_title_clicked")
       : null;
     const bin = document.querySelector(`.${type}-bin`);
-    console.log(el);
-    console.log(this);
+
     if (this.#timeId && el) {
       const ul = document.querySelector(`.${type}_task-list`);
       ul.style.height = `${ul.childElementCount * 43}px`;
       let tasks = ul.childElementCount;
       let sort = this.#ShowAdnHideTaskEl.childNodes[1];
       let count = this.#ShowAdnHideTaskEl.nextSibling;
-      console.log(type, this.#timeId);
-      if (tasks < 2) {
-        sort.classList.remove("show-sort");
-        document.querySelector(`.${type}-bin`).classList.remove("bin-show");
-      } else if (
-        tasks === 2 &&
-        this.#ShowAdnHideTaskEl.classList.contains(`${bin.dataset.bin}`)
-      ) {
-        bin.classList.add("bin-show");
-        sort.classList.add("show-sort");
-        console.log();
-        console.log(el.classList);
-      }
-      if (tasks === 0) {
-        count.style.transform = "translateY(0)";
-        count.style.backgroundColor = "rgb(52, 121, 248)";
-      }
+      this._changeTaskConteinerChildrensDisplay(tasks, type, bin, sort, count);
+    }
+  }
+  _changeTaskConteinerChildrensDisplay(tasks, type, bin, sort, count) {
+    if (tasks < 2) {
+      sort.classList.remove("show-sort");
+      document.querySelector(`.${type}-bin`).classList.remove("bin-show");
+    } else if (
+      tasks === 2 &&
+      this.#ShowAdnHideTaskEl.classList.contains(`${bin.dataset.bin}`)
+    ) {
+      bin.classList.add("bin-show");
+      sort.classList.add("show-sort");
+    }
+    if (tasks === 0) {
+      count.style.transform = "translateY(0)";
+      count.style.backgroundColor = "rgb(52, 121, 248)";
     }
   }
   _newTaskAdded(e) {
@@ -223,23 +265,31 @@ class App {
     //checking if ul is empty
     let ulTasksCount = ul ? ul.childElementCount : null;
     if (ulTasksCount < 1) {
-      this._removeTitleSelectors(tasksTitle, "all", "task_title_clicked");
+      this._removeTitleSelectors(tasksTitle, "all", "task_title_clicked"); //removing all titlel selectors
     }
-    const description = descriptionInput.value.trim();
     const toDotask = taskInput.value;
     if (toDotask) {
+      // 1. add tasks to our main task array
       this._addTaskToTasksArray();
-
+      //2. add task to the dom
       this._addTask(this.#tasks);
+      //3. update tasks wrapper height
       this._ulHeightUpdate(this.#type);
+      //4. update counter of tasks
       this._updateTasksCounter(this.#type);
+      //5. hide form //
       this._hideForm();
+      //6. add sort listener
       this._sortListener();
     } else {
+      // else add focus to unfilled task
       taskInput.focus();
     }
+    // 7. add listener to new tasks
     this._addEvenTListenerToTasks();
+    //8. reset counter color, may it will be red
     this._resetTaskCountColor();
+    // 9. save updated task to local storage
     this._saveToLocalStorage();
   }
   _genereteIDForTasks() {
@@ -277,8 +327,6 @@ class App {
   _sortItems(e) {
     const parrent = e.target.dataset.id;
     const type = e.target.dataset.type;
-    // e.target.dataset.id = "badri";
-    // console.log(e.target);
     let sortArray = this.#tasks.filter((task) => task.type === type);
     const sorted = sortArray.sort((a, b) => {
       if (a.priority.length > b.priority.length) return 1;
@@ -310,6 +358,7 @@ class App {
     this.#tasks.push(task);
   }
   _addEvenTListenerToTasks() {
+    console.log("listener added to tasks");
     let allTasks = document.querySelectorAll(".task_list-li");
     allTasks.forEach((task) => {
       task.addEventListener("click", this._taskUpdateModal.bind(this));
@@ -340,9 +389,8 @@ class App {
   _toggleUpdateModal(lab) {
     this.#taskElement = lab;
     task_overlay.classList.add("task_overlay-show");
-    setTimeout(() => {
-      updatedTaskInput.focus();
-    }, 100);
+
+    updatedTaskInput.focus();
   }
   _getCurrentTaskObjForUpdate(taskEl) {
     //returns current task from array
@@ -468,7 +516,7 @@ class App {
               "afterbegin",
               `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"  ></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
-            console.log("today");
+            console.log("today tasks added");
             break;
           case "tomorrow":
             task.added = true;
@@ -476,7 +524,7 @@ class App {
               "afterbegin",
               `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"  ></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
-            console.log("tomorrow added");
+            console.log("tomorrow tasks added");
             break;
           case "nextWeek":
             task.added = true;
@@ -484,7 +532,7 @@ class App {
               "afterbegin",
               `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
-            console.log("next Week");
+            console.log("next Week tasks added");
             break;
 
           default:
@@ -509,7 +557,7 @@ class App {
       title.classList.toggle("task_title_clicked");
       const taskUlList = document.querySelector(`.${this.#timeId}`);
       let tasksCount = taskUlList.childElementCount;
-
+      // console.log(taskUlList);
       this._removeTitleSelectors(
         tasksTitle,
         this.#timeId,
@@ -551,10 +599,10 @@ class App {
   }
   _getLocalStorageData() {
     const tasks = JSON.parse(localStorage.getItem("tasks"));
-
+    console.log("local storage used");
     if (tasks) {
       this._linkObjectToTaskClass(tasks);
-      this.#tasks = tasks;
+
       this._couneterUpdate();
     }
   }
@@ -564,9 +612,8 @@ class App {
     task_overlay.classList.add("task_overlay-show");
     console.log(this.#tasks);
     this._closeTasksUl();
-    setTimeout(() => {
-      taskInput.focus();
-    }, 30);
+
+    taskInput.focus();
   }
   _hideForm(e) {
     console.log("hide form");
@@ -778,61 +825,17 @@ class App {
     localStorage.setItem("tasks", JSON.stringify(this.#tasks));
   }
   _linkObjectToTaskClass(tasks) {
-    setTimeout(() => {
-      tasks.forEach((task) => {
-        task.added = false;
-        Object.setPrototypeOf(task, new Task());
-        // task.__proto__ = new Task();
-      });
-      this._addTask(this.#tasks);
+    tasks.forEach((task) => {
+      task.added = false;
+      Object.setPrototypeOf(task, new Task());
+      // task.__proto__ = new Task();
+    });
 
-      this._addEvenTListenerToTasks();
-      console.log("local storage used");
-    }, 100);
+    this.#tasks = tasks;
+    this._addTask(this.#tasks);
+
+    this._addEvenTListenerToTasks();
   }
 }
 
 const app = new App();
-
-class Task {
-  constructor(
-    id,
-    task,
-    description,
-    type,
-    status,
-    priority,
-    priorityColor,
-    statusBackground
-  ) {
-    this.id = id;
-    this.task = task;
-    this.description = description;
-    this.type = type;
-    this.status = status;
-    this.priority = priority;
-    this.priorityColor = priorityColor;
-    this.statusBackground = statusBackground;
-  }
-
-  fetchAll() {
-    return this;
-  }
-  save(
-    task,
-    description,
-    type,
-    status,
-    priority,
-    priorityColor,
-    statusBackground
-  ) {
-    this.task = task;
-    this.description = description;
-    this.type = type;
-    this.status = status;
-    this.priority = priority;
-    this.priorityColor = priorityColor;
-    this.statusBackground = statusBackground;
-  }
-}

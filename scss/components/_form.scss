@@ -3,10 +3,9 @@
 
   padding: 10px;
   transition: all 0.4s ease-in-out;
-  visibility: hidden;
+  z-index: -10;
   transform: translate(2%, -5%);
   opacity: 0;
-
   overflow: hidden;
   .form {
     display: flex;
