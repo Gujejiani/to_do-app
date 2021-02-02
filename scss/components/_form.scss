@@ -47,6 +47,8 @@
         @include form_btn(13px);
         @include textArea;
         padding-left: 0;
+        text-align: left;
+
         @media (max-width: 700px) {
           padding-bottom: 30px;
         }
@@ -102,10 +104,13 @@
       align-items: center;
       div {
         margin-bottom: 30px;
-        width: 90px;
+        width: 100px;
         text-align: center;
         cursor: pointer;
         z-index: 32;
+        @media (max-width: 700px) {
+          width: 90px;
+        }
         &:nth-child(3) {
           cursor: unset;
         }

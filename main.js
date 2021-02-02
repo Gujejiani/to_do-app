@@ -170,13 +170,14 @@ const taskPriorityBackgorunds = document.querySelectorAll("span.priority");
 const taskNames = document.querySelectorAll(".task_list-li");
 const taskStatuses = document.querySelectorAll(".task_status");
 
-const setTime = document.querySelector(".set-time");
+// const setTime = document.querySelector(".set-time");
 
 //tasks parrents
 const todayTasks = document.querySelector(".today_task-list");
 const tomorrowTasks = document.querySelector(".tomorrow_task-list");
 const nextWeekTasks = document.querySelector(".nextWeek_task-list");
 
+const defaultTaskPeriod = document.querySelector(".default-type");
 // task Update
 const updatedTaskInput = document.querySelector(".task_input");
 const updatedTaskDescription = document.querySelector(".form-textArea");
@@ -269,7 +270,7 @@ class App {
     }
     const toDotask = taskInput.value;
     if (toDotask) {
-      // 1. add tasks to our main task array
+      // 1. add tasks to our main tasks array
       this._addTaskToTasksArray();
       //2. add task to the dom
       this._addTask(this.#tasks);
@@ -291,14 +292,16 @@ class App {
     this._resetTaskCountColor();
     // 9. save updated task to local storage
     this._saveToLocalStorage();
+
+    //add default time background
+    defaultTaskPeriod.classList.add("task_type-selected");
   }
   _genereteIDForTasks() {
     this.#taskID = 0;
     if (this.#tasks[0]) {
-      let Max = Math.max(...this.#tasks.map((task) => task.id));
+      let max = Math.max(...this.#tasks.map((task) => task.id));
 
-      this.#taskID = Max + 1;
-      console.log(this.#taskID, Max);
+      this.#taskID = max + 1;
     }
   }
   _closeTasksUl() {
@@ -612,7 +615,8 @@ class App {
     task_overlay.classList.add("task_overlay-show");
     console.log(this.#tasks);
     this._closeTasksUl();
-
+    //add default time background
+    defaultTaskPeriod.classList.add("task_type-selected");
     taskInput.focus();
   }
   _hideForm(e) {
@@ -637,7 +641,7 @@ class App {
     if (type.classList.contains("type")) {
       type.classList.add("task_type-selected");
       this.#type = type.dataset.id;
-      setTime.innerHTML = `${this.#type}`;
+      // setTime.innerHTML = `${this.#type}`;
       this._removeTitleSelectors(types, this.#type, "task_type-selected");
     }
   }
@@ -693,6 +697,9 @@ class App {
       priority.innerHTML = `${this.#priority}`;
       priority.style.background = `${this.#priorityColor}`;
       priorityModal.classList.remove("priority-show");
+      document
+        .querySelector(".priority_selected")
+        .classList.remove("priority_selected");
       this._overlayClicked();
     }
   }
@@ -710,7 +717,7 @@ class App {
     priority.innerHTML = "important";
     Status.innerHTML = "To Do";
 
-    setTime.innerHTML = "today";
+    // setTime.innerHTML = "today";
     console.log("reseted");
   }
 

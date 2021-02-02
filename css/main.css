@@ -431,7 +431,8 @@ a {
         padding-top: 10px;
         padding-left: 0;
         margin-bottom: 80px;
-        padding-left: 0; }
+        padding-left: 0;
+        text-align: left; }
         .form_container .form .form_about-description:focus {
           background-color: #eeeee8;
           border: 1px solid #0299be; }
@@ -480,10 +481,13 @@ a {
       align-items: center; }
       .form_container .form .form_details div {
         margin-bottom: 30px;
-        width: 90px;
+        width: 100px;
         text-align: center;
         cursor: pointer;
         z-index: 32; }
+        @media (max-width: 700px) {
+          .form_container .form .form_details div {
+            width: 90px; } }
         .form_container .form .form_details div:nth-child(3) {
           cursor: unset; }
         .form_container .form .form_details div h4 {
