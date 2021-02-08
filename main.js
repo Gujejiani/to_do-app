@@ -1,94 +1,7 @@
 "use strict";
 
-/////////////////// Theme Start ////////////////////////
-
-const thems = document.querySelectorAll(".them");
-const nav = document.querySelector(".nav");
-const body = document.querySelector("body");
-const imgs = document.querySelectorAll("img");
-
-thems.forEach((theme) => {
-  //adding listener to ich theme
-  theme.addEventListener("click", function (e) {
-    const currentTheme = e.currentTarget.dataset.id;
-    themeCheked(currentTheme);
-  });
-});
-
-const navStyle = JSON.parse(localStorage.getItem("nav_style"));
-const bodyStyle = JSON.parse(localStorage.getItem("body_style"));
-const checked = JSON.parse(localStorage.getItem("checked"));
-//checking if theme styles is already added to local Storage, if so than adding them to elements
-
-if (navStyle && bodyStyle && checked) {
-  addStylesFromLocalStorage();
-}
-
-const themeCheked = (id) => {
-  if (!id) return;
-  const check = document.querySelector(`.${id}`);
-  check.classList.toggle("hide");
-
-  switchThemeColors(id);
-};
-
-const switchThemeColors = (id) => {
-  switch (id) {
-    case "dark":
-      nav.classList.remove("sky_nav", "tangerine_nav");
-      body.classList.remove("sky_body", "tangerine_body");
-      nav.classList.toggle("darker_nav");
-      body.classList.toggle("darker_body");
-      removeChecked(id);
-      break;
-    case "sky":
-      nav.classList.remove("darker_nav", "tangerine_nav");
-      body.classList.remove("darker_body", "tangerine_body");
-      nav.classList.toggle("sky_nav");
-      body.classList.toggle("sky_body");
-      removeChecked(id);
-      break;
-    case "tangerine":
-      body.classList.remove("darker_body", "sky_body");
-      nav.classList.remove("sky_nav", "darker_nav");
-      nav.classList.toggle("tangerine_nav");
-      body.classList.toggle("tangerine_body");
-      removeChecked(id);
-  }
-};
-
-const removeChecked = (id) => {
-  //saving theme colors to local Storage
-  saveThemeToLocalStorage(id);
-  //checking if other thems are already checked and if so, removing img
-  imgs.forEach((img) => {
-    if (!img.classList.contains(id)) {
-      img.classList.add("hide");
-    }
-  });
-};
-
-const saveThemeToLocalStorage = (id) => {
-  let navStyle = nav.className.split(" ")[1];
-
-  if (navStyle) {
-    localStorage.setItem("nav_style", JSON.stringify(navStyle));
-    localStorage.setItem("body_style", JSON.stringify(body.className));
-    localStorage.setItem("checked", JSON.stringify(`${id}`));
-  }
-};
-function addStylesFromLocalStorage() {
-  nav.classList.add(`${navStyle}`);
-  body.classList.add(`${bodyStyle}`);
-  imgs.forEach((img) => {
-    if (img.classList.contains(`${checked}`)) {
-      img.classList.remove("hide");
-    } else {
-      img.classList.add("hide");
-    }
-  });
-}
-////////////////////////////////////////// Theme End /////////////////////////////////////////////////////
+import { choosingTheme } from "./themes.js";
+choosingTheme();
 
 class Task {
   constructor(
@@ -99,7 +12,8 @@ class Task {
     status,
     priority,
     priorityColor,
-    statusBackground
+    statusBackground,
+    priorityPoint
   ) {
     this.id = id;
     this.task = task;
@@ -109,11 +23,9 @@ class Task {
     this.priority = priority;
     this.priorityColor = priorityColor;
     this.statusBackground = statusBackground;
+    this.priorityPoint = priorityPoint;
   }
 
-  fetchAll() {
-    return this;
-  }
   save(
     task,
     description,
@@ -121,7 +33,8 @@ class Task {
     status,
     priority,
     priorityColor,
-    statusBackground
+    statusBackground,
+    priorityPoint
   ) {
     this.task = task;
     this.description = description;
@@ -130,6 +43,7 @@ class Task {
     this.priority = priority;
     this.priorityColor = priorityColor;
     this.statusBackground = statusBackground;
+    this.priorityPoint = priorityPoint;
   }
 }
 
@@ -165,13 +79,6 @@ const priority = document.querySelector(".priority");
 const prioritySave = document.querySelector(".priority-save");
 const priorityCancel = document.querySelector(".priority-cancel");
 
-//task add
-const taskPriorityBackgorunds = document.querySelectorAll("span.priority");
-const taskNames = document.querySelectorAll(".task_list-li");
-const taskStatuses = document.querySelectorAll(".task_status");
-
-// const setTime = document.querySelector(".set-time");
-
 //tasks parrents
 const todayTasks = document.querySelector(".today_task-list");
 const tomorrowTasks = document.querySelector(".tomorrow_task-list");
@@ -204,34 +111,42 @@ class App {
   #tasks = [];
   #taskElement;
   #statusBackgorund = "#23ceb7";
-  #ShowAdnHideTaskEl;
+  #ShowAndHideTaskEl;
+  #priorityPoint = 1; //  default to Important
 
   constructor() {
-    tasks_Wrapper.addEventListener("click", this._showAndHidetasks.bind(this));
-    createTask.addEventListener("click", this._toggleOverlayForm.bind(this));
-    formSubmit.addEventListener("submit", this._newTaskAdded.bind(this));
-    task_overlay.addEventListener("click", this._hideForm.bind(this));
-    task_timeTypes.addEventListener("click", this._taskTimeHandler.bind(this));
-    setStatus.addEventListener("click", this._typeSelectHandler);
-    overlay.addEventListener("click", this._overlayClicked);
-    statusModal.addEventListener("click", this._selectStatus.bind(this));
-    priorityModal.addEventListener("click", this._selectPriority.bind(this));
-    prioritySave.addEventListener("click", this._savePriority.bind(this));
-    setPriorityType.addEventListener("click", this._priorityModal.bind(this));
-    priorityCancel.addEventListener("click", this._priorityCancel.bind(this));
-    updatePriority.addEventListener("click", this._priorityModal.bind(this));
-    updateStatus.addEventListener("click", this._typeSelectHandler);
-    updateTask.addEventListener("submit", this._updateTask.bind(this));
-    deleteTask.addEventListener("click", this._deleteTask.bind(this));
-    this._getLocalStorageData();
-    this._sortListener();
-    this._binsAddEvenlisteners();
+    if (tasks_Wrapper) {
+      tasks_Wrapper.addEventListener(
+        "click",
+        this._showAndHidetasks.bind(this)
+      );
+      createTask.addEventListener("click", this._toggleOverlayForm.bind(this));
+      formSubmit.addEventListener("submit", this._newTaskAdded.bind(this));
+      task_overlay.addEventListener("click", this._hideForm.bind(this));
+      task_timeTypes.addEventListener(
+        "click",
+        this._taskTimeHandler.bind(this)
+      );
+      setStatus.addEventListener("click", this._typeSelectHandler);
+      overlay.addEventListener("click", this._overlayClicked);
+      statusModal.addEventListener("click", this._selectStatus.bind(this));
+      priorityModal.addEventListener("click", this._selectPriority.bind(this));
+      prioritySave.addEventListener("click", this._savePriority.bind(this));
+      setPriorityType.addEventListener("click", this._priorityModal.bind(this));
+      priorityCancel.addEventListener("click", this._priorityCancel.bind(this));
+      updatePriority.addEventListener("click", this._priorityModal.bind(this));
+      updateStatus.addEventListener("click", this._typeSelectHandler);
+      updateTask.addEventListener("submit", this._updateTask.bind(this));
+      deleteTask.addEventListener("click", this._deleteTask.bind(this));
+      this._getLocalStorageData();
+      this._sortListener();
+      this._binsAddEvenlisteners();
+    }
   }
 
   _ulHeightUpdate(type) {
-    console.log("ul heigth updated " + type);
-    const el = this.#ShowAdnHideTaskEl //h3 title of tasks
-      ? this.#ShowAdnHideTaskEl.classList.contains("task_title_clicked")
+    const el = this.#ShowAndHideTaskEl //h3 title of tasks
+      ? this.#ShowAndHideTaskEl.classList.contains("task_title_clicked")
       : null;
     const bin = document.querySelector(`.${type}-bin`);
 
@@ -239,18 +154,21 @@ class App {
       const ul = document.querySelector(`.${type}_task-list`);
       ul.style.height = `${ul.childElementCount * 43}px`;
       let tasks = ul.childElementCount;
-      let sort = this.#ShowAdnHideTaskEl.childNodes[1];
-      let count = this.#ShowAdnHideTaskEl.nextSibling;
+      let sort = this.#ShowAndHideTaskEl.childNodes[1];
+      let count = this.#ShowAndHideTaskEl.nextSibling;
+
       this._changeTaskConteinerChildrensDisplay(tasks, type, bin, sort, count);
     }
   }
   _changeTaskConteinerChildrensDisplay(tasks, type, bin, sort, count) {
+    if (tasks < 1) {
+      document.querySelector(`.${type}-bin`).classList.remove("bin-show");
+    }
     if (tasks < 2) {
       sort.classList.remove("show-sort");
-      document.querySelector(`.${type}-bin`).classList.remove("bin-show");
     } else if (
       tasks === 2 &&
-      this.#ShowAdnHideTaskEl.classList.contains(`${bin.dataset.bin}`)
+      this.#ShowAndHideTaskEl.classList.contains(`${bin.dataset.bin}`)
     ) {
       bin.classList.add("bin-show");
       sort.classList.add("show-sort");
@@ -332,14 +250,16 @@ class App {
     const type = e.target.dataset.type;
     let sortArray = this.#tasks.filter((task) => task.type === type);
     const sorted = sortArray.sort((a, b) => {
-      if (a.priority.length > b.priority.length) return 1;
-      if (a.priority.length < b.priority.length) return -1;
+      if (a.priorityPoint < b.priorityPoint) return 1;
+      if (a.priorityPoint > b.priorityPoint) return -1;
     });
     document.querySelector(`.${parrent}`).innerHTML = "";
     sorted.forEach((item) => {
       item.added = false;
     });
+    this.#tasks = sortArray;
     this._addTask(sorted);
+    this._saveToLocalStorage();
     this._addEvenTListenerToTasks();
   }
 
@@ -356,12 +276,12 @@ class App {
       this.#status,
       this.#priority,
       this.#priorityColor,
-      this.#statusBackgorund
+      this.#statusBackgorund,
+      this.#priorityPoint
     );
     this.#tasks.push(task);
   }
   _addEvenTListenerToTasks() {
-    console.log("listener added to tasks");
     let allTasks = document.querySelectorAll(".task_list-li");
     allTasks.forEach((task) => {
       task.addEventListener("click", this._taskUpdateModal.bind(this));
@@ -371,7 +291,6 @@ class App {
   _taskUpdateModal(e) {
     let label;
 
-    console.log("task update");
     if (e.target.nodeName === "LI") {
       label = e.target;
       this._toggleUpdateModal(label);
@@ -398,10 +317,10 @@ class App {
   _getCurrentTaskObjForUpdate(taskEl) {
     //returns current task from array
     if (taskEl) {
-      let id = taskEl.dataset.id;
+      let id = Number(taskEl.dataset.id);
 
       const task = this.#tasks.find((task) => {
-        return task.id == id;
+        return task.id === id;
       });
 
       return task;
@@ -411,7 +330,6 @@ class App {
     e.preventDefault();
 
     if (this.#taskElement) {
-      console.log("updateTask");
       const [
         priorityNode,
         taskTitle,
@@ -423,11 +341,9 @@ class App {
       statusNode.innerHTML = this.#status;
       this._updatePrivateTaskArray();
 
-      console.log(this.#status);
-
       this._removeOverlayAndUpdateModal();
       this._resetNewTask();
-      console.log(this.#tasks);
+
       this._saveToLocalStorage();
     }
   }
@@ -435,7 +351,7 @@ class App {
     // _updateTasksCounter(type) //update count
 
     this.#taskElement.remove();
-    console.log(this.#type);
+
     this._ulHeightUpdate(this.#type);
     this._deleteTaskFromArray();
   }
@@ -444,7 +360,7 @@ class App {
     const currentTask = this._getCurrentTaskObjForUpdate(this.#taskElement);
     //find index of task
     const deleteObj = this.#tasks.findIndex(
-      (task) => task.id == currentTask.id
+      (task) => task.id === currentTask.id
     );
     //remove task
     this.#tasks.splice(deleteObj, 1);
@@ -469,7 +385,7 @@ class App {
     //updating araay of tasks
 
     const updateTask = this._getCurrentTaskObjForUpdate(this.#taskElement);
-    const index = this.#tasks.findIndex((task) => task.id == updateTask.id);
+    const index = this.#tasks.findIndex((task) => task.id === updateTask.id);
     this.#tasks[index].save(
       updatedTaskInput.value,
       updatedTaskDescription.value,
@@ -477,7 +393,8 @@ class App {
       this.#status,
       this.#priority,
       this.#priorityColor,
-      this.#statusBackgorund
+      this.#statusBackgorund,
+      this.#priorityPoint
     );
   }
   _getValuesToUpdateForm(task) {
@@ -497,19 +414,16 @@ class App {
     setPriorityUpdate.style.background = "#965657";
   }
   _updateStatusInUpdateModal() {
-    console.log("updated status");
     setStatusUpdate.innerHTML = this.#status;
     setStatusUpdate.style.background = `${this.#statusBackgorund}`;
   }
 
   _updatePriorityInUpdateModal() {
-    console.log("updated");
     setPriorityUpdate.innerHTML = this.#priority;
     setPriorityUpdate.style.background = this.#priorityColor;
   } ///////////////////////////////////////// UPDATE PRIORITY   yyyyyyyyyyy
 
   _addTask(tasks) {
-    console.log("add Task---------------------------");
     tasks.forEach((task) => {
       if (!task.added) {
         switch (task.type) {
@@ -519,7 +433,7 @@ class App {
               "afterbegin",
               `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"  ></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
-            console.log("today tasks added");
+
             break;
           case "tomorrow":
             task.added = true;
@@ -527,7 +441,7 @@ class App {
               "afterbegin",
               `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"  ></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
-            console.log("tomorrow tasks added");
+
             break;
           case "nextWeek":
             task.added = true;
@@ -535,7 +449,7 @@ class App {
               "afterbegin",
               `   <li data-id="${task.id}" class="task_list-li"><span class="priority" style="background-color:${task.priorityColor};"></span><span class="task_title" >${task.task}</span><span class="task_status"  style="background-color:${task.statusBackground};">${task.status}</span></li>`
             );
-            console.log("next Week tasks added");
+
             break;
 
           default:
@@ -551,16 +465,15 @@ class App {
     const count = title.nextSibling; //task = the ul list tasks
     const sortIcon = title.childNodes[1]; // today || tomorrow   || nextWeek
 
-    console.log("task clicked");
     //checking if title clicked
     if (title.nodeName === "H3") {
-      this.#ShowAdnHideTaskEl = e.target;
+      this.#ShowAndHideTaskEl = e.target;
       this.#timeId = title.dataset.id;
       const bin = document.querySelector(`.${sortIcon.dataset.type}-bin`); // today-bin || tomorrow-bin   || nextWeek-bin
       title.classList.toggle("task_title_clicked");
       const taskUlList = document.querySelector(`.${this.#timeId}`);
       let tasksCount = taskUlList.childElementCount;
-      // console.log(taskUlList);
+
       this._removeTitleSelectors(
         tasksTitle,
         this.#timeId,
@@ -573,9 +486,9 @@ class App {
         taskUlList.style.height = `${tasksCount * 43}px`;
         count.style.transform = "translateY(120%)";
         count.style.backgroundColor = "rgb(52, 121, 248)";
+        bin.classList.add("bin-show");
         if (tasksCount > 1) {
           sortIcon.classList.add("show-sort");
-          bin.classList.add("bin-show");
         }
       } else {
         count.style.transform = "translateY(0)";
@@ -583,7 +496,7 @@ class App {
         taskUlList.style.height = `0`;
         sortIcon.classList.remove("show-sort");
         bin.classList.remove("bin-show");
-        this.#ShowAdnHideTaskEl.classList.remove("task_title_clicked");
+        this.#ShowAndHideTaskEl.classList.remove("task_title_clicked");
       }
       if (taskUlList.offsetHeight === 0 && tasksCount === 0) {
         count.style.backgroundColor = "#c96567";
@@ -594,7 +507,6 @@ class App {
   //removing color from past selected task titles
   _removeTitleSelectors(el, id, className) {
     el.forEach((title) => {
-      // console.log(title.dataset.id, id, className);
       if (title.dataset.id !== id) {
         title.classList.remove(`${className}`);
       }
@@ -602,7 +514,6 @@ class App {
   }
   _getLocalStorageData() {
     const tasks = JSON.parse(localStorage.getItem("tasks"));
-    console.log("local storage used");
     if (tasks) {
       this._linkObjectToTaskClass(tasks);
 
@@ -613,15 +524,13 @@ class App {
   _toggleOverlayForm(e) {
     formModal.classList.toggle("form_modal-Show");
     task_overlay.classList.add("task_overlay-show");
-    console.log(this.#tasks);
+
     this._closeTasksUl();
     //add default time background
     defaultTaskPeriod.classList.add("task_type-selected");
     taskInput.focus();
   }
   _hideForm(e) {
-    console.log("hide form");
-
     //hide form modal
     formModal.classList.remove("form_modal-Show");
 
@@ -664,7 +573,7 @@ class App {
         "status_selected"
       );
       Status.textContent = this.#status;
-      console.log("245 overlay");
+
       this._overlayClicked();
     }
   }
@@ -703,6 +612,7 @@ class App {
       this._overlayClicked();
     }
   }
+
   _priorityCancel() {
     this._resetPriority();
   }
@@ -713,12 +623,12 @@ class App {
     this.#status = "To Do";
     this.#priorityColor = "#965657";
     this.#statusBackgorund = "#23ceb7";
+    this.#priorityPoint = 1;
     priority.style.background = "#965657";
     priority.innerHTML = "important";
     Status.innerHTML = "To Do";
 
     // setTime.innerHTML = "today";
-    console.log("reseted");
   }
 
   _resetPriority() {
@@ -774,14 +684,18 @@ class App {
     switch (priority) {
       case "Important":
         this.#priorityColor = "#965657";
+        this.#priorityPoint = 1;
         break;
       case "Family":
         this.#priorityColor = "#2880a3";
+        this.#priorityPoint = 3;
         break;
       case "Deadline":
         this.#priorityColor = "#e8a87c";
+        this.#priorityPoint = 2;
         break;
       case "Fun":
+        this.#priorityPoint = 4;
         this.#priorityColor = "#85dccb";
         break;
       default:
@@ -805,10 +719,10 @@ class App {
   _binResetTasks(e) {
     // 1.  get time type  which value to reset
     const type = e.target.dataset.bin;
-    console.log(type);
+
     // 2. filter tasks and only get those types which don"t match to our reset type
     const filteredTaks = this.#tasks.filter((task) => task.type !== type);
-    console.log(filteredTaks);
+
     // 3. update tasks
     this.#tasks = filteredTaks;
     // 4. remove filtered aitems from dom
